@@ -1960,3 +1960,208 @@ body {
     font-size: 1rem !important;
   }
 }
+
+/* v46: precise clock centering + tighter, clearer start-time cards */
+.registration-panel label:has(#finishTime) {
+  position: relative !important;
+}
+
+.registration-panel input[type="time"] {
+  text-align: center !important;
+  text-align-last: center !important;
+  padding-left: 72px !important;
+  padding-right: 72px !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.registration-panel input[type="time"]::-webkit-datetime-edit,
+.registration-panel input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  text-align: center !important;
+  justify-content: center !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  right: 18px !important;
+}
+
+/* Start-time cards: slightly smaller boxes, stronger timing readability */
+.row {
+  grid-template-columns: 64px minmax(0, 1fr) minmax(112px, auto) !important;
+  gap: 11px !important;
+  padding: 12px 13px !important;
+  border-radius: 22px !important;
+}
+
+.stage-status-cell {
+  gap: 5px !important;
+  min-width: 56px !important;
+}
+
+.stage-status-cell .badge {
+  width: 39px !important;
+  height: 39px !important;
+  border-radius: 13px !important;
+  font-size: 1rem !important;
+}
+
+.stage-status-cell .row-status {
+  font-size: .61rem !important;
+  line-height: 1.06 !important;
+  max-width: 58px !important;
+}
+
+.runner-details .name {
+  font-size: 1rem !important;
+  line-height: 1.12 !important;
+}
+
+.runner-details .meta {
+  margin-top: 3px !important;
+  font-size: .74rem !important;
+  line-height: 1.20 !important;
+}
+
+.runner-details .actual-metrics {
+  margin-top: 5px !important;
+  padding: 4px 8px !important;
+  font-size: .68rem !important;
+}
+
+.time-stack {
+  gap: 5px !important;
+  min-width: 112px !important;
+}
+
+.time-line {
+  min-height: 38px !important;
+  padding: 6px 8px !important;
+  border-radius: 13px !important;
+}
+
+.time-line span {
+  font-size: .62rem !important;
+  letter-spacing: .09em !important;
+}
+
+.time-line strong,
+.start-line strong {
+  font-size: 1.18rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+}
+
+@media (max-width: 520px) {
+  .registration-panel input[type="time"] {
+    padding-left: 70px !important;
+    padding-right: 70px !important;
+    font-size: 1.78rem !important;
+  }
+
+  .registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+    right: 16px !important;
+  }
+
+  .row {
+    grid-template-columns: 50px minmax(0, 1fr) !important;
+    gap: 8px 10px !important;
+    padding: 11px !important;
+    border-radius: 19px !important;
+  }
+
+  .stage-status-cell {
+    min-width: 46px !important;
+    gap: 4px !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 35px !important;
+    height: 35px !important;
+    border-radius: 12px !important;
+    font-size: .98rem !important;
+  }
+
+  .stage-status-cell .row-status {
+    max-width: 48px !important;
+    font-size: .55rem !important;
+    line-height: 1.04 !important;
+  }
+
+  .runner-details .name {
+    font-size: .98rem !important;
+    line-height: 1.10 !important;
+  }
+
+  .runner-details .meta {
+    font-size: .70rem !important;
+    line-height: 1.16 !important;
+    margin-top: 3px !important;
+  }
+
+  .runner-details .actual-metrics {
+    margin-top: 5px !important;
+    padding: 4px 7px !important;
+    font-size: .63rem !important;
+    line-height: 1.13 !important;
+  }
+
+  .time-stack {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    margin-top: 0 !important;
+  }
+
+  .time-line {
+    min-height: 52px !important;
+    padding: 8px 9px !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+
+  .time-line span {
+    font-size: .60rem !important;
+    letter-spacing: .10em !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1.22rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .registration-panel input[type="time"] {
+    padding-left: 62px !important;
+    padding-right: 62px !important;
+    font-size: 1.62rem !important;
+  }
+
+  .row {
+    grid-template-columns: 46px minmax(0, 1fr) !important;
+    padding: 10px !important;
+    gap: 7px 9px !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: .90rem !important;
+  }
+
+  .runner-details .name {
+    font-size: .94rem !important;
+  }
+
+  .runner-details .meta {
+    font-size: .67rem !important;
+  }
+
+  .time-line {
+    min-height: 50px !important;
+    padding: 7px !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1.12rem !important;
+  }
+}
