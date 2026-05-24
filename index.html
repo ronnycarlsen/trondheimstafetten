@@ -10,62 +10,73 @@
 <body>
   <main class="app">
     <header class="hero">
-      <div>
-        <p class="kicker">Trondheimstafetten</p>
+      <div class="hero-copy">
+        <p class="kicker">Trondheimstafetten live</p>
         <h1>Starttider og veksling</h1>
-        <p class="sub">Legg inn løpere, hastighet og faktisk vekslingstid. Starttider beregnes automatisk videre.</p>
+        <p class="sub">Velg etappe og løper, registrer faktisk vekslingstid, og se nye starttider beregnet automatisk.</p>
       </div>
-      <button id="syncButton" class="ghost" type="button">Synk</button>
+      <button id="syncButton" class="ghost pill" type="button">Synk</button>
     </header>
 
     <section id="setupWarning" class="warning hidden">
       Kjører lokalt på denne enheten. Legg inn Supabase URL og nøkkel i <code>config.js</code> for live deling via én lenke.
     </section>
 
-    <section class="card">
-      <h2>Registrer / endre løper</h2>
-      <form id="runnerForm" class="grid">
-        <label>Etappe
-          <select id="stage"></select>
-        </label>
-        <label>Navn
-          <input id="name" placeholder="Løpernavn" required />
-        </label>
-        <label>Distanse km
-          <input id="distance" type="number" min="0" step="0.001" required />
-        </label>
-        <label>Hastighet km/t
-          <input id="speed" type="number" min="0" step="0.1" required />
-        </label>
-        <label>Startsted
-          <input id="startPlace" placeholder="Startsted" />
-        </label>
-        <label>Veksling / mål
-          <input id="finishPlace" placeholder="Veksling / mål" />
-        </label>
-        <button class="primary wide" type="submit">Lagre løper</button>
-      </form>
+    <section class="quick-card">
+      <div>
+        <span class="quick-label">Neste åpne etappe</span>
+        <strong id="nextRunner">--</strong>
+      </div>
+      <div>
+        <span class="quick-label">Neste estimerte veksling</span>
+        <strong id="nextEstimate">--:--</strong>
+      </div>
     </section>
 
-    <section class="card">
+    <section class="card accent-card">
       <h2>Registrer faktisk vekslingstid</h2>
       <div class="grid">
-        <label>Etappe som kommer inn
+        <label class="wide">Etappe / løper som kommer inn
           <select id="finishStage"></select>
         </label>
         <label>Klokkeslett
           <input id="finishTime" type="time" />
         </label>
         <button id="nowButton" class="secondary" type="button">Bruk nå</button>
-        <button id="finishButton" class="primary" type="button">Registrer veksling</button>
+        <button id="finishButton" class="primary wide" type="button">Registrer veksling</button>
       </div>
-      <p class="hint">Når en faktisk veksling registreres, flyttes neste løpers starttid til faktisk tid og alle videre tider beregnes på nytt.</p>
+      <p class="hint">Dropdownen viser både etappenummer og navn, slik at det er enklere å registrere riktig løper.</p>
+    </section>
+
+    <section class="card">
+      <h2>Endre løper / hastighet</h2>
+      <form id="runnerForm" class="grid">
+        <label class="wide">Velg etappe / løper
+          <select id="stage"></select>
+        </label>
+        <label>Navn
+          <input id="name" placeholder="Løpernavn" required />
+        </label>
+        <label>Hastighet km/t
+          <input id="speed" type="number" min="0" step="0.1" required />
+        </label>
+        <label>Distanse km
+          <input id="distance" type="number" min="0" step="0.001" required />
+        </label>
+        <label>Startsted
+          <input id="startPlace" placeholder="Startsted" />
+        </label>
+        <label class="wide">Veksling / mål
+          <input id="finishPlace" placeholder="Veksling / mål" />
+        </label>
+        <button class="primary wide" type="submit">Lagre endring</button>
+      </form>
     </section>
 
     <section class="card sticky-card">
       <div class="section-head">
         <h2>Starttider</h2>
-        <button id="resetButton" class="danger" type="button">Nullstill</button>
+        <button id="resetButton" class="danger" type="button">Nullstill tider</button>
       </div>
       <div id="list" class="list"></div>
     </section>

@@ -131,10 +131,18 @@ async function resetRemote() {
   await supabaseClient.from("stafett_actuals").delete().eq("event_id", cfg.EVENT_ID);
 }
 
+function runnerLabel(runner) {
+  const name = runner?.name?.trim() || "Uten navn";
+  return `${runner.stage} - ${name}`;
+}
+
 function fillSelects() {
-  const stages = runners.map(r => r.stage).sort((a, b) => a - b);
+  const sorted = [...runners].sort((a, b) => a.stage - b.stage);
+  const options = sorted.map(r => `<option value="${r.stage}">${escapeHtml(runnerLabel(r))}</option>`).join("");
   for (const id of ["stage", "finishStage"]) {
-    $(id).innerHTML = stages.map(s => `<option value="${s}">${s}</option>`).join("");
+    const current = $(id).value;
+    $(id).innerHTML = options;
+    if (current) $(id).value = current;
   }
 }
 
@@ -153,19 +161,23 @@ function render() {
   fillSelects();
   if (!$('name').value) fillForm($("stage").value || 1);
   const rows = calculate();
+  const next = rows.find(r => r.status !== "done");
+  if ($("nextRunner")) $("nextRunner").textContent = next ? runnerLabel(next) : "Alle registrert";
+  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.finishEstimate) : "Ferdig";
   $("list").innerHTML = rows.map(r => {
     const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
     return `<article class="row ${r.status}">
       <div class="badge">${r.stage}</div>
       <div>
-        <div class="name">${escapeHtml(r.name || "Uten navn")}</div>
+        <div class="name">${escapeHtml(runnerLabel(r))}</div>
         <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
         <div class="meta">${Number(r.distance_km).toFixed(3)} km · ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
         <div class="meta">${statusText}${r.actualFinish ? ` · faktisk inn ${toTime(r.actualFinish)}` : ""}</div>
       </div>
       <div>
         <div class="time">${toTime(r.startTime)}</div>
-        <div class="small">estimert inn ${toTime(r.finishEstimate)}</div>
+        <div class="small">start</div>
+        <div class="small strong">inn ${toTime(r.finishEstimate)}</div>
       </div>
     </article>`;
   }).join("");
@@ -232,6 +244,10 @@ async function boot() {
     await resetRemote();
     render();
   });
+
+  if (supabaseClient) {
+    setInterval(sync, 15000);
+  }
 }
 
 boot();
