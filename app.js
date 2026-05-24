@@ -484,3 +484,18 @@ async function boot() {
 }
 
 boot();
+
+
+// v34 visual-only status styling
+(function () {
+  function styleStatuses() {
+    document.querySelectorAll(".row-status").forEach((el) => {
+      const txt = (el.textContent || "").trim().toLowerCase();
+      el.classList.toggle("status-running", txt.includes("løper nå"));
+      el.classList.toggle("status-not-started", txt.includes("ikke startet"));
+    });
+  }
+  document.addEventListener("DOMContentLoaded", styleStatuses);
+  const observer = new MutationObserver(styleStatuses);
+  observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
+})();

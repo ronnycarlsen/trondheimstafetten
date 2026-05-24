@@ -1266,3 +1266,170 @@ body {
     min-width: 72px !important;
   }
 }
+
+
+/* v34: mobile refinements only */
+
+/* Make time input show a consistent, tappable clock even where native picker icon is hidden */
+.registration-panel .time-field,
+.registration-panel .time-input-wrap,
+.registration-panel .time-control,
+.registration-panel label:has(input[type="time"]) {
+  position: relative;
+}
+
+.registration-panel label:has(input[type="time"])::after {
+  content: "◷";
+  position: absolute;
+  right: 18px;
+  top: calc(50% + 12px);
+  transform: translateY(-50%);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #12f3cf;
+  border: 1px solid rgba(0, 232, 199, .55);
+  background: rgba(0, 232, 199, .08);
+  pointer-events: none;
+  font-size: 1.15rem;
+  font-weight: 900;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+}
+
+.registration-panel input[type="time"] {
+  padding-right: 64px !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+  display: block !important;
+  width: 44px !important;
+  height: 44px !important;
+  margin-right: -8px !important;
+  cursor: pointer !important;
+}
+
+/* Split quick-action button label */
+.registration-panel .time-shortcut,
+.time-shortcut {
+  flex-direction: column !important;
+  gap: 2px !important;
+  line-height: 1.05 !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+.button-sub {
+  display: block;
+  font-size: .84em;
+  opacity: .88;
+  margin-top: 2px;
+}
+
+/* Status colors */
+.row-status {
+  font-weight: 900 !important;
+}
+
+.row-status,
+.status-running,
+.running {
+  color: #ffb347 !important;
+}
+
+.row-status:contains("Ikke startet") {
+  color: #ff7e7e !important;
+}
+
+/* CSS :contains is not broadly supported, so color likely statuses by common classes/text containers */
+.not-started,
+.status-not-started {
+  color: #ff7e7e !important;
+}
+
+/* If status text has no class, add visual distinction by row state classes if present */
+.row:not(.active):not(.completed) .row-status {
+  color: #ff8a8a !important;
+}
+
+.row.active .row-status,
+.row.is-active .row-status,
+.row.current .row-status {
+  color: #ffb347 !important;
+}
+
+/* Mobile runner cards: badge higher, more room for text */
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 34px minmax(0, 1fr) minmax(76px, auto) !important;
+    gap: 9px !important;
+    align-items: start !important;
+    padding: 11px 10px !important;
+  }
+
+  .badge {
+    align-self: start !important;
+    margin-top: 0 !important;
+    width: 33px !important;
+    height: 33px !important;
+    font-size: .98rem !important;
+  }
+
+  .name {
+    font-size: 1.03rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .meta {
+    font-size: .74rem !important;
+    line-height: 1.18 !important;
+    margin-top: 3px !important;
+  }
+
+  .time-stack {
+    align-self: center !important;
+    min-width: 76px !important;
+  }
+
+  .time-line strong {
+    font-size: .94rem !important;
+  }
+
+  .start-line strong {
+    font-size: 1.08rem !important;
+  }
+
+  .actual-metrics {
+    margin-top: 5px !important;
+    font-size: .66rem !important;
+    line-height: 1.12 !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .row {
+    grid-template-columns: 31px minmax(0, 1fr) minmax(70px, auto) !important;
+    gap: 8px !important;
+    padding: 10px 9px !important;
+  }
+
+  .badge {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: .90rem !important;
+  }
+
+  .name {
+    font-size: .96rem !important;
+  }
+
+  .meta {
+    font-size: .70rem !important;
+  }
+
+  .time-stack {
+    min-width: 70px !important;
+  }
+}
