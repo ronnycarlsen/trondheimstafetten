@@ -322,7 +322,7 @@ function render() {
         <div class="name">${escapeHtml(runnerLabel(r))}</div>
         <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
         <div class="meta">${Number(r.distance_km).toFixed(3)} km · estimert ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
-        <div class="meta row-status">${statusText}</div>
+        <div class="meta row-status status-${r.status}">${statusText}</div>
         ${measuredText ? `<div class="actual-metrics">${escapeHtml(measuredText)}</div>` : ""}
       </div>
       <div class="time-stack">
@@ -484,3 +484,23 @@ async function boot() {
 }
 
 boot();
+
+
+// v41 visual-only: traffic-light status colors without altering runner data.
+(function () {
+  function colorRunnerStatuses() {
+    document.querySelectorAll(".row-status").forEach((el) => {
+      const txt = (el.textContent || "").trim().toLowerCase();
+      el.classList.toggle("status-done", txt.includes("registrert") || txt.includes("faktisk"));
+      el.classList.toggle("status-live", txt.includes("løper nå"));
+      el.classList.toggle("status-waiting", txt.includes("ikke startet"));
+      el.classList.toggle("status-calculated", txt.includes("beregnet"));
+    });
+  }
+  document.addEventListener("DOMContentLoaded", colorRunnerStatuses);
+  new MutationObserver(colorRunnerStatuses).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+})();
