@@ -317,12 +317,14 @@ function render() {
       ? `Tid brukt ${Math.round(r.measured.elapsed)} min · faktisk ${r.measured.speed.toFixed(1)} km/t${r.measured.fromStage !== r.measured.toStage ? ` · etappe ${r.measured.fromStage}-${r.measured.toStage}` : ""}`
       : "";
     return `<article class="row ${r.status}">
-      <div class="badge">${r.stage}</div>
-      <div>
+      <div class="stage-status-cell">
+        <div class="badge">${r.stage}</div>
+        <div class="row-status status-${r.status}">${statusText}</div>
+      </div>
+      <div class="runner-details">
         <div class="name">${escapeHtml(runnerLabel(r))}</div>
         <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
         <div class="meta">${Number(r.distance_km).toFixed(3)} km · estimert ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
-        <div class="meta row-status">${statusText}</div>
         ${measuredText ? `<div class="actual-metrics">${escapeHtml(measuredText)}</div>` : ""}
       </div>
       <div class="time-stack">
@@ -484,125 +486,3 @@ async function boot() {
 }
 
 boot();
-
-
-// v34 visual-only status styling
-(function () {
-  function styleStatuses() {
-    document.querySelectorAll(".row-status").forEach((el) => {
-      const txt = (el.textContent || "").trim().toLowerCase();
-      el.classList.toggle("status-running", txt.includes("løper nå"));
-      el.classList.toggle("status-not-started", txt.includes("ikke startet"));
-    });
-  }
-  document.addEventListener("DOMContentLoaded", styleStatuses);
-  const observer = new MutationObserver(styleStatuses);
-  observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
-})();
-
-
-// v35 visual-only: status color classes and optional mobile badge status placement
-(function () {
-  function decorateRows() {
-    document.querySelectorAll(".row-status").forEach((el) => {
-      const txt = (el.textContent || "").trim().toLowerCase();
-      el.classList.toggle("status-running", txt.includes("løper nå"));
-      el.classList.toggle("status-not-started", txt.includes("ikke startet"));
-    });
-  }
-  document.addEventListener("DOMContentLoaded", decorateRows);
-  new MutationObserver(decorateRows).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
-})();
-
-
-// v36 visual-only: place status under stage number on mobile and color statuses.
-(function () {
-  function decorateRunnerRows() {
-    document.querySelectorAll(".row, .runner-row, .runner-card").forEach((row) => {
-      const badge = row.querySelector(".badge, .stage-number, .num");
-      const status = row.querySelector(".row-status, .runner-status, .status");
-      if (!badge || !status) return;
-
-      const txt = (status.textContent || "").trim().toLowerCase();
-      status.classList.toggle("status-running", txt.includes("løper nå"));
-      status.classList.toggle("status-not-started", txt.includes("ikke startet"));
-
-      if (!badge.parentElement.classList.contains("stage-cell")) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "stage-cell";
-        badge.parentNode.insertBefore(wrapper, badge);
-        wrapper.appendChild(badge);
-      }
-
-      const stageCell = row.querySelector(".stage-cell");
-      if (stageCell && status.parentElement !== stageCell) {
-        stageCell.appendChild(status);
-      }
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", decorateRunnerRows);
-  new MutationObserver(decorateRunnerRows).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
-})();
-
-
-// v37 visual-only: ensure runner status sits under the stage number and is colored correctly.
-(function () {
-  function enhanceRunnerRows() {
-    document.querySelectorAll(".row, .runner-row, .runner-card").forEach((row) => {
-      const badge = row.querySelector(".badge, .stage-number, .num");
-      const status = row.querySelector(".row-status, .runner-status, .status");
-      if (!badge || !status) return;
-
-      const text = (status.textContent || "").trim().toLowerCase();
-      status.classList.toggle("status-running", text.includes("løper nå"));
-      status.classList.toggle("status-not-started", text.includes("ikke startet"));
-
-      let stageCell = row.querySelector(".stage-cell-v37");
-      if (!stageCell) {
-        stageCell = document.createElement("div");
-        stageCell.className = "stage-cell-v37";
-        badge.parentNode.insertBefore(stageCell, badge);
-        stageCell.appendChild(badge);
-      }
-      if (status.parentElement !== stageCell) stageCell.appendChild(status);
-      row.classList.add("runner-row-v37");
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", enhanceRunnerRows);
-  new MutationObserver(enhanceRunnerRows).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
-})();
-
-
-// v39 visual-only: status colors without removing any runner data
-(function () {
-  function colorStatusesOnly() {
-    document.querySelectorAll(".row-status, .runner-status, .status").forEach((el) => {
-      const txt = (el.textContent || "").trim().toLowerCase();
-      el.classList.toggle("status-done", txt.includes("registrert") || txt.includes("faktisk"));
-      el.classList.toggle("status-live", txt.includes("løper nå"));
-      el.classList.toggle("status-waiting", txt.includes("ikke startet"));
-      el.classList.toggle("status-calculated", txt.includes("beregnet"));
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", colorStatusesOnly);
-  new MutationObserver(colorStatusesOnly).observe(document.documentElement, {
-    childList: true,
-    subtree: true,
-    characterData: true
-  });
-})();
