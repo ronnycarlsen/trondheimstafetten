@@ -261,14 +261,17 @@ function escapeHtml(value) {
   return String(value).replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
 }
 
-async function sync() {
+async function sync(options = {}) {
+  const silent = Boolean(options.silent);
   if (!supabaseClient) return render();
   try {
     await loadRemote();
     saveLocal();
     render();
+    selectCurrentRunnerForRegistration();
   } catch (e) {
-    alert("Kunne ikke synkronisere: " + e.message);
+    if (!silent) alert("Kunne ikke synkronisere: " + e.message);
+    console.warn("Kunne ikke synkronisere", e);
   }
 }
 
@@ -277,7 +280,7 @@ async function boot() {
   if (isAdmin && $("adminBadge")) $("adminBadge").classList.remove("hidden");
   loadLocal();
   const hasRemote = await initSupabase();
-  if (hasRemote) await sync();
+  if (hasRemote) await sync({ silent: true });
   render();
   selectCurrentRunnerForRegistration();
 
@@ -310,8 +313,7 @@ async function boot() {
     actuals[stage] = time;
     saveLocal();
     await saveActualRemote(stage, time);
-    render();
-    selectCurrentRunnerForRegistration();
+    await sync({ silent: true });
   });
 
   $("syncButton").addEventListener("click", sync);
@@ -330,7 +332,7 @@ async function boot() {
   }
 
   if (supabaseClient) {
-    setInterval(sync, 15000);
+    setInterval(() => sync({ silent: true }), 20000);
   }
 }
 

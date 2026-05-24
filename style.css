@@ -529,3 +529,403 @@ body {
   .quick-card { grid-template-columns: 1fr; gap: 14px; }
   .registration-panel { margin-top: 14px !important; }
 }
+
+/* v10: Premium hero + robust Android/Edge stacking fix */
+:root {
+  --cutrin-gold: #f6d365;
+  --cutrin-cyan: #38bdf8;
+  --cutrin-green: #34d399;
+  --ink: #07111f;
+}
+
+body {
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 15% -8%, rgba(52, 211, 153, 0.34), transparent 22rem),
+    radial-gradient(circle at 92% 2%, rgba(56, 189, 248, 0.42), transparent 24rem),
+    radial-gradient(circle at 55% 34%, rgba(246, 211, 101, 0.16), transparent 18rem),
+    linear-gradient(180deg, #06101f 0%, #0b1b2e 36%, #eaf3fb 36%, #f8fafc 100%);
+}
+
+.app-shell {
+  width: min(100%, 560px);
+  padding: max(18px, env(safe-area-inset-top)) 14px 46px;
+}
+
+.hero-card {
+  display: block;
+  position: relative;
+  min-height: 190px;
+  isolation: isolate;
+  border-radius: 34px;
+  padding: 22px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 16%, rgba(255, 255, 255, .24), transparent 11rem),
+    radial-gradient(circle at 88% 12%, rgba(56, 189, 248, .32), transparent 12rem),
+    radial-gradient(circle at 82% 88%, rgba(52, 211, 153, .28), transparent 14rem),
+    linear-gradient(135deg, rgba(5, 13, 31, .98), rgba(9, 51, 83, .94) 48%, rgba(7, 89, 80, .92));
+  box-shadow:
+    0 30px 80px rgba(2, 6, 23, .42),
+    inset 0 1px 0 rgba(255,255,255,.26),
+    inset 0 -1px 0 rgba(255,255,255,.08);
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background:
+    linear-gradient(110deg, rgba(255,255,255,.18), transparent 24%, transparent 70%, rgba(255,255,255,.10)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.065) 0 1px, transparent 1px 14px);
+  mask-image: linear-gradient(180deg, rgba(0,0,0,.9), rgba(0,0,0,.52));
+}
+
+.hero-card::after {
+  content: "";
+  position: absolute;
+  right: -52px;
+  bottom: -64px;
+  width: 210px;
+  height: 210px;
+  z-index: -1;
+  border-radius: 999px;
+  background:
+    conic-gradient(from 210deg, rgba(56,189,248,.70), rgba(52,211,153,.52), rgba(246,211,101,.26), rgba(56,189,248,.70));
+  filter: blur(2px);
+  opacity: .62;
+}
+
+.hero-topline {
+  align-items: flex-start;
+}
+
+.kicker {
+  position: absolute;
+  top: 24px;
+  right: 22px;
+  margin: 0;
+  color: rgba(255,255,255,.92);
+  font-size: .68rem;
+  font-weight: 950;
+  letter-spacing: .20em;
+  text-align: right;
+  text-shadow: 0 1px 14px rgba(0,0,0,.28);
+}
+
+.live-pill {
+  padding: 8px 12px;
+  border-color: rgba(255,255,255,.28);
+  background: rgba(255,255,255,.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.24),
+    0 10px 28px rgba(2,6,23,.24);
+}
+
+.hero-card h1 {
+  max-width: 11ch;
+  margin: 28px 0 10px;
+  font-size: clamp(1.72rem, 6.2vw, 2.28rem);
+  line-height: .94;
+  letter-spacing: -.065em;
+  text-wrap: balance;
+}
+
+.hero-card .sub {
+  max-width: 28ch;
+  color: rgba(255,255,255,.78);
+  font-size: .96rem;
+}
+
+.hero-actions {
+  margin-top: 18px;
+}
+
+#syncButton {
+  color: #06101f;
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(226,232,240,.92));
+  border: 1px solid rgba(255,255,255,.45);
+  box-shadow: 0 16px 34px rgba(2, 6, 23, .22);
+}
+
+.quick-card {
+  /* This is the Android Edge fix: keep normal document flow and reserve real space */
+  position: relative;
+  z-index: 1;
+  margin-top: 18px !important;
+  margin-bottom: 22px !important;
+  min-height: 138px;
+  overflow: hidden;
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 88% 10%, rgba(56,189,248,.22), transparent 12rem),
+    linear-gradient(135deg, rgba(9, 18, 35, .98), rgba(8, 47, 73, .94));
+  box-shadow: 0 18px 48px rgba(2, 6, 23, .20);
+}
+
+.quick-card::after {
+  content: "";
+  position: absolute;
+  inset: auto -40px -70px auto;
+  width: 160px;
+  height: 160px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(52,211,153,.30), transparent 68%);
+  pointer-events: none;
+}
+
+.quick-card .quick-label {
+  color: rgba(255,255,255,.62);
+  font-size: .70rem;
+  letter-spacing: .16em;
+}
+
+.quick-card strong {
+  color: #fff;
+  font-size: clamp(1.08rem, 4.8vw, 1.35rem);
+  line-height: 1.12;
+}
+
+.registration-panel {
+  /* Never float upward over quick/live card */
+  clear: both;
+  position: relative;
+  z-index: 1;
+  margin-top: 0 !important;
+  transform: none !important;
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.99), rgba(241,248,255,.96));
+  box-shadow:
+    0 24px 64px rgba(15, 23, 42, .18),
+    inset 0 1px 0 rgba(255,255,255,.95);
+}
+
+.registration-panel h2 {
+  font-size: 1.22rem;
+}
+
+#finishStage,
+#finishTime {
+  border-radius: 20px;
+  background: linear-gradient(180deg, #ffffff, #f8fafc);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 8px 18px rgba(15,23,42,.045);
+}
+
+#nowButton {
+  background: linear-gradient(135deg, #e0f2fe, #bfdbfe 54%, #d1fae5);
+  border: 1px solid rgba(14,165,233,.25);
+  color: #075985;
+}
+
+#finishButton {
+  background: linear-gradient(135deg, #0284c7 0%, #06b6d4 42%, #22c55e 100%);
+  box-shadow: 0 18px 38px rgba(14, 165, 233, .25), 0 8px 18px rgba(34,197,94,.14);
+}
+
+.hint {
+  background: rgba(226,232,240,.48);
+  color: #475569;
+}
+
+@media (max-width: 420px) {
+  body {
+    background:
+      radial-gradient(circle at 14% -6%, rgba(52, 211, 153, 0.34), transparent 18rem),
+      radial-gradient(circle at 92% 0%, rgba(56, 189, 248, 0.42), transparent 19rem),
+      linear-gradient(180deg, #06101f 0%, #0b1b2e 34%, #eaf3fb 34%, #f8fafc 100%);
+  }
+
+  .app-shell {
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  .hero-card {
+    min-height: 196px;
+    padding: 20px;
+    border-radius: 32px;
+  }
+
+  .hero-card h1 {
+    margin-top: 32px;
+    font-size: clamp(1.62rem, 9.2vw, 2.05rem);
+  }
+
+  .kicker {
+    top: 24px;
+    right: 20px;
+    font-size: .64rem;
+  }
+
+  .quick-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 14px;
+    min-height: 156px;
+    margin-top: 18px !important;
+    margin-bottom: 24px !important;
+    padding: 18px;
+  }
+
+  .registration-panel {
+    margin-top: 0 !important;
+    padding: 18px;
+    border-radius: 30px;
+  }
+}
+
+@media (max-width: 360px) {
+  .hero-card h1 { font-size: 1.56rem; }
+  .hero-card .sub { font-size: .9rem; }
+  .quick-card strong { font-size: 1.05rem; }
+}
+
+/* v11: premium Cutrin header + safer Android/Edge spacing + 20s autosync behaviour */
+body {
+  background:
+    radial-gradient(circle at 6% -8%, rgba(34, 197, 94, 0.38), transparent 22rem),
+    radial-gradient(circle at 88% -4%, rgba(56, 189, 248, 0.46), transparent 24rem),
+    radial-gradient(circle at 50% 24%, rgba(15, 23, 42, 0.58), transparent 22rem),
+    linear-gradient(180deg, #030712 0%, #071827 39%, #edf6fb 39%, #f8fafc 100%);
+}
+
+.app-shell {
+  padding-top: max(16px, env(safe-area-inset-top));
+}
+
+.hero-card {
+  isolation: isolate;
+  min-height: 178px;
+  padding: 22px;
+  border-radius: 34px;
+  background:
+    linear-gradient(135deg, rgba(3, 7, 18, .98) 0%, rgba(8, 47, 73, .96) 48%, rgba(20, 184, 166, .74) 100%),
+    radial-gradient(circle at 18% 4%, rgba(255,255,255,.30), transparent 10rem),
+    radial-gradient(circle at 85% 10%, rgba(56,189,248,.46), transparent 13rem);
+  border: 1px solid rgba(255,255,255,.24);
+  box-shadow: 0 26px 80px rgba(2, 6, 23, .42), inset 0 1px 0 rgba(255,255,255,.20);
+}
+
+.hero-card::before {
+  opacity: .62;
+  background:
+    linear-gradient(115deg, rgba(255,255,255,.20), transparent 25%, transparent 65%, rgba(255,255,255,.12)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.08) 0 1px, transparent 1px 14px);
+}
+
+.hero-card::after {
+  right: -70px;
+  top: -76px;
+  width: 210px;
+  height: 210px;
+  background: radial-gradient(circle, rgba(125, 211, 252, .62), rgba(45, 212, 191, .24) 44%, transparent 69%);
+}
+
+.hero-topline {
+  align-items: flex-start;
+}
+
+.cutrin-mark {
+  margin-left: auto;
+  padding-top: 2px;
+  color: rgba(255,255,255,.88);
+  font-size: .70rem;
+  font-weight: 950;
+  letter-spacing: .20em;
+  text-align: right;
+  white-space: nowrap;
+  text-shadow: 0 1px 16px rgba(255,255,255,.18);
+}
+
+.admin-badge:not(.hidden) {
+  margin-left: 8px;
+}
+
+.hero-card h1 {
+  max-width: 12.5ch;
+  margin-top: 20px;
+  font-size: clamp(1.70rem, 5.7vw, 2.20rem);
+  letter-spacing: -.06em;
+}
+
+.hero-card .sub {
+  max-width: 28ch;
+  color: rgba(255,255,255,.80);
+}
+
+.live-pill {
+  background: rgba(255,255,255,.14);
+  border-color: rgba(255,255,255,.24);
+  backdrop-filter: blur(14px);
+}
+
+.quick-card {
+  margin-top: 16px;
+  z-index: 1;
+}
+
+.registration-panel {
+  margin-top: 18px !important;
+  z-index: 3;
+  transform: none !important;
+}
+
+.registration-panel::before {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(255,255,255,.45), transparent 38%, rgba(56,189,248,.10));
+  opacity: .7;
+}
+
+.registration-panel > * {
+  position: relative;
+  z-index: 1;
+}
+
+#syncButton::after {
+  content: " automatisk";
+  font-weight: 700;
+  opacity: .62;
+}
+
+@media (max-width: 420px) {
+  .app-shell {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: calc(32px + env(safe-area-inset-bottom));
+  }
+
+  .hero-card {
+    min-height: 176px;
+    padding: 20px;
+    border-radius: 32px;
+  }
+
+  .hero-card h1 {
+    max-width: 11.5ch;
+    margin-top: 18px;
+    font-size: clamp(1.62rem, 9vw, 2.10rem);
+  }
+
+  .cutrin-mark {
+    font-size: .62rem;
+    letter-spacing: .17em;
+  }
+
+  .quick-card {
+    margin-top: 16px !important;
+    display: grid;
+    gap: 16px;
+  }
+
+  .registration-panel {
+    margin-top: 20px !important;
+  }
+
+  #syncButton::after { content: ""; }
+}
