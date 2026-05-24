@@ -42,8 +42,8 @@ body {
 }
 
 .hero-card h1 {
-  margin: 28px 0 8px;
-  font-size: clamp(2rem, 8vw, 3rem);
+  margin: 22px 0 8px;
+  font-size: clamp(1.85rem, 6.8vw, 2.55rem);
   line-height: 0.95;
   letter-spacing: -0.06em;
 }
@@ -397,4 +397,15 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
   .registration-panel { margin-top: -28px; }
   .hero-card { border-radius: 30px; }
   .panel { border-radius: 26px; }
+}
+
+
+/* v8 refinements */
+.hero-card h1 { font-size: clamp(1.85rem, 6.8vw, 2.55rem); }
+.kicker { color: rgba(255,255,255,.82); }
+.quick-card .quick-label::after { content: ':'; }
+.quick-card strong { line-height: 1.15; }
+@media (max-width: 420px) {
+  .hero-card { min-height: 170px; padding: 20px; }
+  .hero-card h1 { margin-top: 18px; }
 }

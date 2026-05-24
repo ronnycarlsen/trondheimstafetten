@@ -11,8 +11,8 @@
   <main class="app-shell">
     <header class="hero-card">
       <div class="hero-copy">
-        <div class="hero-topline"><span class="live-pill"><span></span> LIVE</span><span id="adminBadge" class="admin-badge hidden">ADMIN</span></div><p class="kicker">Trondheimstafetten live</p>
-        <h1>Trondheimstafetten</h1>
+        <div class="hero-topline"><span class="live-pill"><span></span> LIVE</span><span id="adminBadge" class="admin-badge hidden">ADMIN</span></div><p class="kicker">Cutrin Norge</p>
+        <h1>Trondheimstafetten Live</h1>
         <p class="sub">Velg etappe, sett tidspunkt og registrer. Starttider oppdateres automatisk.</p>
       </div>
       <div class="hero-actions"><button id="resetButton" class="danger-button hidden" type="button">Start nytt løp</button><button id="syncButton" class="small-button" type="button">Synk</button></div>
@@ -24,7 +24,7 @@
 
     <section class="quick-card panel">
       <div>
-        <span class="quick-label">Neste åpne etappe</span>
+        <span class="quick-label">Nå løper</span>
         <strong id="nextRunner">--</strong>
       </div>
       <div>
@@ -46,6 +46,13 @@
         <button id="finishButton" class="primary-button wide" type="button">Registrer veksling</button>
       </div>
       <p class="hint">Velg «1 min siden», så registrerer du veksling.</p>
+    </section>
+
+    <section class="panel sticky-card">
+      <div class="section-head">
+        <h2>Starttider</h2>
+      </div>
+      <div id="list" class="list"></div>
     </section>
 
     <section class="panel">
@@ -73,12 +80,6 @@
       </form>
     </section>
 
-    <section class="panel sticky-card">
-      <div class="section-head">
-        <h2>Starttider</h2>
-      </div>
-      <div id="list" class="list"></div>
-    </section>
   </main>
   <script src="config.js"></script>
   <script src="app.js"></script>
