@@ -1677,3 +1677,286 @@ body {
     min-height: 68px !important;
   }
 }
+
+/* v45: premium clock/register controls + calmer start-time cards */
+.registration-panel .form-grid {
+  align-items: stretch !important;
+}
+
+.registration-panel label:has(#finishTime) {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.registration-panel input[type="time"] {
+  min-height: 88px !important;
+  padding: 18px 52px 26px 52px !important;
+  text-align: center !important;
+  font-size: 1.86rem !important;
+  font-weight: 950 !important;
+  letter-spacing: .015em !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(0,232,199,.16), transparent 58%),
+    linear-gradient(145deg, rgba(34,61,76,.98), rgba(12,28,40,.98)) !important;
+  border: 1px solid rgba(0,232,199,.50) !important;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -18px 34px rgba(0,0,0,.10) !important;
+}
+
+.registration-panel label:has(#finishTime)::after {
+  left: 50% !important;
+  right: auto !important;
+  bottom: 14px !important;
+  transform: translateX(-50%) !important;
+  width: max-content !important;
+  color: rgba(215,255,247,.74) !important;
+  font-size: .75rem !important;
+  font-weight: 760 !important;
+  letter-spacing: .03em !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  position: absolute !important;
+  right: 16px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  margin: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  padding: 10px !important;
+  border-radius: 999px !important;
+  background-color: rgba(0,232,199,.10) !important;
+  box-shadow: 0 0 0 1px rgba(0,232,199,.18) !important;
+}
+
+.registration-panel .time-shortcut {
+  min-height: 88px !important;
+  border-radius: 28px !important;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.10), transparent 56%),
+    linear-gradient(145deg, rgba(40,76,88,.98), rgba(12,35,45,.98)) !important;
+  border: 1px solid rgba(0,232,199,.46) !important;
+  color: #dcfff8 !important;
+  box-shadow:
+    0 18px 40px rgba(0,0,0,.20),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -18px 34px rgba(0,0,0,.10) !important;
+}
+
+.registration-panel .time-shortcut::before {
+  content: "↻";
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  margin-bottom: 2px;
+  border-radius: 999px;
+  color: #061a19;
+  background: linear-gradient(135deg, #bafff3, #12e0bd);
+  box-shadow: 0 8px 18px rgba(0,232,199,.18);
+}
+
+.registration-panel .hint {
+  max-width: 30rem !important;
+  opacity: .92 !important;
+}
+
+/* Start-time cards: more premium, more readable, same data */
+.row {
+  grid-template-columns: 72px minmax(0, 1fr) minmax(118px, auto) !important;
+  gap: 14px !important;
+  padding: 16px !important;
+  border-radius: 26px !important;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(0,232,199,.10), transparent 46%),
+    linear-gradient(145deg, rgba(13,29,40,.94), rgba(6,17,27,.92)) !important;
+}
+
+.stage-status-cell {
+  padding: 2px 0 !important;
+}
+
+.stage-status-cell .badge {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 15px !important;
+  background:
+    linear-gradient(145deg, rgba(0,232,199,.16), rgba(0,0,0,.20)) !important;
+  border-color: rgba(0,232,199,.22) !important;
+}
+
+.stage-status-cell .row-status {
+  max-width: 70px !important;
+  font-size: .68rem !important;
+}
+
+.runner-details .name {
+  font-size: 1.05rem !important;
+  letter-spacing: -.015em !important;
+}
+
+.runner-details .meta {
+  margin-top: 5px !important;
+  color: rgba(226,238,242,.68) !important;
+}
+
+.time-stack {
+  gap: 8px !important;
+}
+
+.time-line {
+  min-height: 34px !important;
+  padding: 6px 9px !important;
+  border-radius: 14px !important;
+  background: rgba(2, 8, 14, .28) !important;
+  border: 1px solid rgba(137, 170, 181, .12) !important;
+}
+
+.time-line span {
+  color: rgba(226,238,242,.58) !important;
+}
+
+.time-line strong {
+  color: #f8feff !important;
+}
+
+.actual-finish {
+  border-color: rgba(56,232,112,.26) !important;
+  background: rgba(56,232,112,.08) !important;
+}
+
+@media (max-width: 520px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 13px !important;
+  }
+
+  .registration-panel input[type="time"] {
+    min-height: 90px !important;
+    padding: 18px 52px 28px 52px !important;
+    font-size: 1.82rem !important;
+  }
+
+  .registration-panel .time-shortcut {
+    min-height: 78px !important;
+    font-size: 1.02rem !important;
+  }
+
+  .registration-panel .time-shortcut::before {
+    width: 26px;
+    height: 26px;
+    font-size: .95rem;
+  }
+
+  .row {
+    grid-template-columns: 56px minmax(0, 1fr) !important;
+    gap: 10px 12px !important;
+    padding: 14px !important;
+    border-radius: 22px !important;
+    align-items: start !important;
+  }
+
+  .stage-status-cell {
+    min-width: 52px !important;
+    gap: 6px !important;
+    justify-content: flex-start !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 14px !important;
+    font-size: 1.08rem !important;
+  }
+
+  .stage-status-cell .row-status {
+    max-width: 54px !important;
+    font-size: .60rem !important;
+    line-height: 1.05 !important;
+  }
+
+  .runner-details .name {
+    font-size: 1.03rem !important;
+    line-height: 1.16 !important;
+  }
+
+  .runner-details .meta {
+    font-size: .76rem !important;
+    line-height: 1.28 !important;
+    margin-top: 5px !important;
+  }
+
+  .runner-details .actual-metrics {
+    display: inline-block !important;
+    margin-top: 7px !important;
+    padding: 5px 8px !important;
+    font-size: .68rem !important;
+    line-height: 1.18 !important;
+    border-radius: 12px !important;
+  }
+
+  .time-stack {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 8px !important;
+    margin-top: 2px !important;
+    text-align: left !important;
+  }
+
+  .time-line {
+    min-height: 48px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    justify-content: center !important;
+    gap: 2px !important;
+    padding: 8px 10px !important;
+  }
+
+  .time-line span {
+    font-size: .58rem !important;
+    letter-spacing: .10em !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1.08rem !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .row {
+    grid-template-columns: 52px minmax(0, 1fr) !important;
+    padding: 12px !important;
+    gap: 9px 10px !important;
+  }
+
+  .runner-details .name {
+    font-size: .98rem !important;
+  }
+
+  .runner-details .meta {
+    font-size: .72rem !important;
+  }
+
+  .time-stack {
+    gap: 7px !important;
+  }
+
+  .time-line {
+    min-height: 46px !important;
+    padding: 8px !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1rem !important;
+  }
+}
