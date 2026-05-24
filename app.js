@@ -80,32 +80,6 @@ function minutesBetween(startTime, endTime) {
   return diff;
 }
 
-function measuredSegmentFor(stage, actualFinishTime, sorted) {
-  if (!actualFinishTime) return null;
-  const previousActualStage = Object.keys(actuals)
-    .map(Number)
-    .filter(s => Number.isFinite(s) && s < stage && actuals[s])
-    .sort((a, b) => b - a)[0];
-
-  const fromStage = previousActualStage ? previousActualStage + 1 : 1;
-  const fromTime = previousActualStage ? actuals[previousActualStage] : DEFAULT_START_TIME;
-  const elapsed = minutesBetween(fromTime, actualFinishTime);
-  if (!elapsed || elapsed <= 0) return null;
-
-  const distance = sorted
-    .filter(r => r.stage >= fromStage && r.stage <= stage)
-    .reduce((sum, r) => sum + Number(r.distance_km || 0), 0);
-  if (!distance) return null;
-
-  return {
-    fromStage,
-    previousActualStage: previousActualStage || null,
-    elapsed,
-    distance,
-    speed: (distance / elapsed) * 60
-  };
-}
-
 function latestRegisteredStage() {
   // Bruk siste registrering i tid, ikke første manglende etappe.
   // Dette gjør at appen tåler at noen glemmer en tidligere veksling.
@@ -129,20 +103,73 @@ function nextStageToRegister(sorted = [...runners].sort((a, b) => a.stage - b.st
   return sorted.find(r => r.stage === latest + 1) || sorted.find(r => r.stage > latest) || sorted[0] || null;
 }
 
+function segmentDistance(rows) {
+  return rows.reduce((sum, r) => sum + Number(r.distance_km || 0), 0);
+}
+
 function calculate() {
   const sorted = [...runners].sort((a, b) => a.stage - b.stage);
   const liveStage = nextStageToRegister(sorted)?.stage;
-  let start = toMinutes(DEFAULT_START_TIME);
-  return sorted.map((runner) => {
-    const startTime = start;
-    const finishEstimate = startTime + legMinutes(runner);
-    const actualFinish = actuals[runner.stage] ? toMinutes(actuals[runner.stage]) : null;
-    const status = actualFinish ? "done" : (runner.stage === liveStage ? "live" : "waiting");
-    const measured = actualFinish ? measuredSegmentFor(runner.stage, actuals[runner.stage], sorted) : null;
-    const row = { ...runner, startTime, finishEstimate, actualFinish, status, measured };
-    start = actualFinish ?? finishEstimate;
-    return row;
-  });
+  const rows = sorted.map(r => ({
+    ...r,
+    startTime: null,
+    finishEstimate: null,
+    directActualFinish: actuals[r.stage] ? toMinutes(actuals[r.stage]) : null,
+    actualFinish: actuals[r.stage] ? toMinutes(actuals[r.stage]) : null,
+    interpolated: false,
+    measured: null,
+    status: "waiting"
+  }));
+
+  let previousStage = 0;
+  let previousTime = toMinutes(DEFAULT_START_TIME);
+  const actualStages = Object.keys(actuals)
+    .map(Number)
+    .filter(stage => Number.isFinite(stage) && actuals[stage])
+    .sort((a, b) => a - b);
+
+  for (const anchorStage of actualStages) {
+    const anchorTime = toMinutes(actuals[anchorStage]);
+    if (anchorTime === null) continue;
+    let elapsed = anchorTime - previousTime;
+    if (elapsed < 0) elapsed += 24 * 60;
+
+    const segmentRows = rows.filter(r => r.stage > previousStage && r.stage <= anchorStage);
+    const distance = segmentDistance(segmentRows);
+    const actualSpeed = distance && elapsed > 0 ? (distance / elapsed) * 60 : null;
+    let cursor = previousTime;
+
+    for (const row of segmentRows) {
+      const dist = Number(row.distance_km || 0);
+      const legUsed = actualSpeed ? (dist / actualSpeed) * 60 : legMinutes(row);
+      row.startTime = cursor;
+      cursor += legUsed;
+      row.finishEstimate = row.stage === anchorStage ? anchorTime : cursor;
+      row.interpolated = row.stage !== anchorStage;
+      row.status = row.stage === anchorStage ? "done" : "calculated";
+      row.measured = actualSpeed ? {
+        elapsed: row.stage === anchorStage ? minutesBetween(toTime(row.startTime), actuals[anchorStage]) : legUsed,
+        speed: actualSpeed,
+        fromStage: previousStage + 1,
+        toStage: anchorStage,
+        previousActualStage: previousStage || null,
+        anchorStage
+      } : null;
+    }
+
+    previousStage = anchorStage;
+    previousTime = anchorTime;
+  }
+
+  let cursor = previousTime;
+  for (const row of rows.filter(r => r.stage > previousStage)) {
+    row.startTime = cursor;
+    row.finishEstimate = cursor + legMinutes(row);
+    row.status = row.stage === liveStage ? "live" : "waiting";
+    cursor = row.finishEstimate;
+  }
+
+  return rows;
 }
 
 function saveLocal() {
@@ -266,11 +293,17 @@ function render() {
   if ($("nextRunner")) $("nextRunner").textContent = next ? runnerLabel(next) : "Alle registrert";
   if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.startTime) : "Ferdig";
   $("list").innerHTML = rows.map(r => {
-    const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
-    const shownFinish = r.actualFinish ?? r.finishEstimate;
-    const finishText = r.actualFinish ? "Faktisk inn" : "Estimert inn";
+    const statusText = r.status === "done"
+      ? "Registrert"
+      : r.status === "calculated"
+        ? `Beregnet fra veksling ${r.measured?.toStage || ""}`
+        : r.status === "live"
+          ? "Løper nå"
+          : "Ikke startet";
+    const shownFinish = r.finishEstimate;
+    const finishText = r.directActualFinish ? "Faktisk inn" : (r.interpolated ? "Beregnet inn" : "Estimert inn");
     const measuredText = r.measured
-      ? `Tid brukt ${Math.round(r.measured.elapsed)} min · faktisk ${r.measured.speed.toFixed(1)} km/t${r.measured.previousActualStage ? ` · fra etappe ${r.measured.previousActualStage}` : ""}`
+      ? `Tid brukt ${Math.round(r.measured.elapsed)} min · faktisk ${r.measured.speed.toFixed(1)} km/t${r.measured.fromStage !== r.measured.toStage ? ` · etappe ${r.measured.fromStage}-${r.measured.toStage}` : ""}`
       : "";
     return `<article class="row ${r.status}">
       <div class="badge">${r.stage}</div>
@@ -283,7 +316,7 @@ function render() {
       </div>
       <div class="time-stack">
         <div class="time-line start-line"><span>Start</span><strong>${toTime(r.startTime)}</strong></div>
-        <div class="time-line finish-line ${r.actualFinish ? "actual-finish" : ""}"><span>${finishText}</span><strong>${toTime(shownFinish)}</strong></div>
+        <div class="time-line finish-line ${r.directActualFinish ? "actual-finish" : ""}"><span>${finishText}</span><strong>${toTime(shownFinish)}</strong></div>
       </div>
     </article>`;
   }).join("");
