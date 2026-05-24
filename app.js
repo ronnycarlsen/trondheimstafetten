@@ -29,16 +29,23 @@ function configured() {
 }
 
 
-function currentMinusOneMinute() {
-  const d = new Date(Date.now() - 60 * 1000);
-  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+function timeFromDate(date) {
+  return `${String(date.getHours()).padStart(2, "0")}:${String(date.getMinutes()).padStart(2, "0")}`;
+}
+
+function currentTime() {
+  return timeFromDate(new Date());
+}
+
+function oneMinuteAgo() {
+  return timeFromDate(new Date(Date.now() - 60 * 1000));
 }
 
 function refreshFinishTime(force = false) {
   const input = $("finishTime");
   if (!input) return;
   if (force || (!finishTimeManualOverride && document.activeElement !== input)) {
-    input.value = currentMinusOneMinute();
+    input.value = currentTime();
   }
 }
 
@@ -206,10 +213,9 @@ function render() {
         <div class="meta">${Number(r.distance_km).toFixed(3)} km · ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
         <div class="meta">${statusText}${r.actualFinish ? ` · faktisk inn ${toTime(r.actualFinish)}` : ""}</div>
       </div>
-      <div>
-        <div class="time">${toTime(r.startTime)}</div>
-        <div class="small">start</div>
-        <div class="small strong">inn ${toTime(r.finishEstimate)}</div>
+      <div class="time-stack">
+        <div class="time-line start-line"><span>Start</span><strong>${toTime(r.startTime)}</strong></div>
+        <div class="time-line finish-line"><span>Inn</span><strong>${toTime(r.finishEstimate)}</strong></div>
       </div>
     </article>`;
   }).join("");
@@ -325,8 +331,8 @@ async function boot() {
   });
 
   $("nowButton").addEventListener("click", () => {
-    finishTimeManualOverride = false;
-    refreshFinishTime(true);
+    finishTimeManualOverride = true;
+    $("finishTime").value = oneMinuteAgo();
   });
 
   $("finishButton").addEventListener("click", async () => {

@@ -934,3 +934,64 @@ body {
 /* v12: same sync label on desktop/mobile + auto-updated registration time */
 #syncButton::after { content: "" !important; }
 #finishTime { transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }
+
+
+/* v13: correct time logic + clearer start/inn timeline cards */
+.time-stack {
+  min-width: 112px;
+  display: grid;
+  gap: 6px;
+  justify-items: end;
+  text-align: right;
+}
+.time-line {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+  white-space: nowrap;
+}
+.time-line span {
+  color: #64748b;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: .10em;
+  text-transform: uppercase;
+}
+.time-line strong {
+  color: #0f172a;
+  font-weight: 950;
+  line-height: 1;
+}
+.start-line strong {
+  font-size: 1.42rem;
+  letter-spacing: -.04em;
+}
+.finish-line strong {
+  font-size: 1.02rem;
+  opacity: .78;
+}
+.row.live .start-line strong {
+  color: #047857;
+}
+.row.done .time-stack {
+  opacity: .82;
+}
+@media (max-width: 420px) {
+  .row > .time-stack {
+    grid-column: 1 / -1;
+    width: 100%;
+    justify-items: stretch;
+    padding-top: 10px;
+    border-top: 1px solid rgba(148,163,184,.22);
+  }
+  .time-line {
+    justify-content: space-between;
+  }
+  .start-line strong {
+    font-size: 1.52rem;
+  }
+  .finish-line strong {
+    font-size: 1.06rem;
+  }
+}
