@@ -1362,3 +1362,268 @@ body {
   justify-content: center;
   text-align: center;
 }
+
+
+/* v42 final cleanup: status under etappenummer on PC + mobile, traffic colors everywhere */
+
+/* One clean help text design on all screens */
+.registration-panel .hint {
+  text-align: center !important;
+  max-width: 34rem !important;
+  margin: 16px auto 0 !important;
+  color: rgba(226,238,242,.78) !important;
+  font-size: .88rem !important;
+  line-height: 1.42 !important;
+  letter-spacing: normal !important;
+}
+
+.registration-panel .hint br {
+  display: none !important;
+}
+
+.registration-panel .hint::before,
+.registration-panel .hint::after {
+  content: "" !important;
+  display: inline-block !important;
+  width: 46px !important;
+  height: 1px !important;
+  margin: 0 12px 5px !important;
+  background: linear-gradient(90deg, transparent, rgba(226,238,242,.32)) !important;
+}
+
+.registration-panel .hint::after {
+  background: linear-gradient(90deg, rgba(226,238,242,.32), transparent) !important;
+}
+
+/* Runner row structure */
+.row {
+  display: grid !important;
+  grid-template-columns: 64px minmax(0, 1fr) minmax(96px, auto) !important;
+  gap: 12px !important;
+  align-items: center !important;
+}
+
+.stage-status-cell {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  min-width: 58px !important;
+}
+
+.stage-status-cell .badge {
+  margin: 0 !important;
+  color: #13f3cf !important;
+  flex: 0 0 auto !important;
+}
+
+.stage-status-cell .row-status {
+  margin: 0 !important;
+  text-align: center !important;
+  font-size: .66rem !important;
+  line-height: 1.05 !important;
+  font-weight: 950 !important;
+  max-width: 62px !important;
+  white-space: normal !important;
+  letter-spacing: -.01em !important;
+}
+
+.runner-details {
+  min-width: 0 !important;
+}
+
+.runner-details .name,
+.runner-details .meta,
+.runner-details .actual-metrics {
+  display: block !important;
+  visibility: visible !important;
+}
+
+/* Traffic light status colors, all screens */
+.row-status.status-done,
+.row-status.status-registered,
+.status-done {
+  color: #38e870 !important;
+}
+
+.row-status.status-live,
+.status-live {
+  color: #ffb13d !important;
+}
+
+.row-status.status-waiting,
+.status-waiting {
+  color: #ff7078 !important;
+}
+
+.row-status.status-calculated,
+.status-calculated {
+  color: #7dd3fc !important;
+}
+
+/* Support app status classes directly */
+.row.done .row-status,
+.row.registered .row-status {
+  color: #38e870 !important;
+}
+
+.row.live .row-status {
+  color: #ffb13d !important;
+}
+
+.row.waiting .row-status {
+  color: #ff7078 !important;
+}
+
+.row.calculated .row-status {
+  color: #7dd3fc !important;
+}
+
+/* Time field and quick button, same on desktop/mobile */
+.registration-panel input[type="time"] {
+  min-height: 82px !important;
+  padding: 18px 54px 30px 18px !important;
+  text-align: left !important;
+  font-size: 1.72rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  border-radius: 24px !important;
+}
+
+.registration-panel label:has(#finishTime) {
+  position: relative !important;
+}
+
+.registration-panel label:has(#finishTime)::after {
+  content: "Velg tidspunkt" !important;
+  position: absolute !important;
+  left: 18px !important;
+  bottom: 13px !important;
+  z-index: 2 !important;
+  color: rgba(226,238,242,.70) !important;
+  font-size: .76rem !important;
+  font-weight: 650 !important;
+  pointer-events: none !important;
+  text-transform: none !important;
+  letter-spacing: normal !important;
+}
+
+.registration-panel .field-help {
+  display: none !important;
+}
+
+.registration-panel .time-shortcut {
+  min-height: 82px !important;
+  border-radius: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 3px !important;
+  text-align: center !important;
+  white-space: normal !important;
+  line-height: 1.08 !important;
+  font-weight: 900 !important;
+}
+
+.button-sub {
+  display: block !important;
+  font-size: .82em !important;
+  opacity: .95 !important;
+  margin-top: 2px !important;
+}
+
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 58px minmax(0, 1fr) minmax(78px, auto) !important;
+    gap: 9px !important;
+    padding: 12px 10px !important;
+  }
+
+  .stage-status-cell {
+    min-width: 54px !important;
+    gap: 5px !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1.05rem !important;
+  }
+
+  .stage-status-cell .row-status {
+    font-size: .62rem !important;
+    max-width: 56px !important;
+  }
+
+  .runner-details .name {
+    font-size: 1.02rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .runner-details .meta {
+    font-size: .74rem !important;
+    line-height: 1.18 !important;
+    margin-top: 3px !important;
+  }
+
+  .runner-details .actual-metrics {
+    font-size: .66rem !important;
+    line-height: 1.14 !important;
+    margin-top: 5px !important;
+  }
+
+  .time-stack {
+    min-width: 78px !important;
+    align-self: center !important;
+    gap: 4px !important;
+  }
+
+  .time-line span {
+    font-size: .56rem !important;
+  }
+
+  .time-line strong {
+    font-size: .92rem !important;
+  }
+
+  .start-line strong {
+    font-size: 1.08rem !important;
+  }
+
+  .registration-panel .hint {
+    font-size: .86rem !important;
+    max-width: 22rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .row {
+    grid-template-columns: 54px minmax(0, 1fr) minmax(70px, auto) !important;
+    gap: 8px !important;
+    padding: 10px 9px !important;
+  }
+
+  .stage-status-cell {
+    min-width: 50px !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .stage-status-cell .row-status {
+    font-size: .57rem !important;
+    max-width: 50px !important;
+  }
+
+  .runner-details .name {
+    font-size: .96rem !important;
+  }
+
+  .runner-details .meta {
+    font-size: .70rem !important;
+  }
+}
