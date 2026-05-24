@@ -70,22 +70,31 @@ function legMinutes(runner) {
   return (d / s) * 60;
 }
 
+function latestRegisteredStage() {
+  const stages = Object.keys(actuals)
+    .map(Number)
+    .filter(Number.isFinite);
+  return stages.length ? Math.max(...stages) : 0;
+}
+
+function nextStageToRegister(sorted = [...runners].sort((a, b) => a.stage - b.stage)) {
+  const latest = latestRegisteredStage();
+  return sorted.find(r => r.stage > latest && !actuals[r.stage]) || sorted.find(r => !actuals[r.stage]) || null;
+}
+
 function calculate() {
   const sorted = [...runners].sort((a, b) => a.stage - b.stage);
+  const liveStage = nextStageToRegister(sorted)?.stage;
   let start = toMinutes(DEFAULT_START_TIME);
   return sorted.map((runner) => {
     const startTime = start;
     const finishEstimate = startTime + legMinutes(runner);
     const actualFinish = actuals[runner.stage] ? toMinutes(actuals[runner.stage]) : null;
-    const status = actualFinish ? "done" : (Date.now() && sorted.findIndex(x => x.stage === runner.stage) === firstOpenIndex(sorted) ? "live" : "waiting");
+    const status = actualFinish ? "done" : (runner.stage === liveStage ? "live" : "waiting");
     const row = { ...runner, startTime, finishEstimate, actualFinish, status };
     start = actualFinish ?? finishEstimate;
     return row;
   });
-}
-
-function firstOpenIndex(sorted) {
-  return sorted.findIndex(r => !actuals[r.stage]);
 }
 
 function saveLocal() {
@@ -181,7 +190,7 @@ function fillSelects() {
 
 function selectCurrentRunnerForRegistration() {
   const rows = calculate();
-  const next = rows.find(r => r.status !== "done");
+  const next = nextStageToRegister(rows);
   if (next && $("finishStage")) $("finishStage").value = String(next.stage);
 }
 
@@ -200,9 +209,9 @@ function render() {
   fillSelects();
   if (!$('name').value) fillForm($("stage").value || 1);
   const rows = calculate();
-  const next = rows.find(r => r.status !== "done");
+  const next = nextStageToRegister(rows);
   if ($("nextRunner")) $("nextRunner").textContent = next ? runnerLabel(next) : "Alle registrert";
-  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.finishEstimate) : "Ferdig";
+  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.startTime) : "Ferdig";
   $("list").innerHTML = rows.map(r => {
     const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
     return `<article class="row ${r.status}">
