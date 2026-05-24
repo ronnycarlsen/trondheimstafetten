@@ -1627,3 +1627,26 @@ body {
     font-size: .70rem !important;
   }
 }
+
+
+/* v43: ryddigere registreringstekst og trygg mobil-layout for klokke + Ferdig nå */
+.registration-panel .hint .button-sub {
+  display: inline !important;
+  font-size: inherit !important;
+  margin-top: 0 !important;
+}
+
+@media (max-width: 520px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    width: 100% !important;
+  }
+
+  .registration-panel .time-shortcut {
+    min-height: 68px !important;
+  }
+}
