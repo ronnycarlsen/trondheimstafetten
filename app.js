@@ -552,3 +552,36 @@ boot();
     characterData: true
   });
 })();
+
+
+// v37 visual-only: ensure runner status sits under the stage number and is colored correctly.
+(function () {
+  function enhanceRunnerRows() {
+    document.querySelectorAll(".row, .runner-row, .runner-card").forEach((row) => {
+      const badge = row.querySelector(".badge, .stage-number, .num");
+      const status = row.querySelector(".row-status, .runner-status, .status");
+      if (!badge || !status) return;
+
+      const text = (status.textContent || "").trim().toLowerCase();
+      status.classList.toggle("status-running", text.includes("løper nå"));
+      status.classList.toggle("status-not-started", text.includes("ikke startet"));
+
+      let stageCell = row.querySelector(".stage-cell-v37");
+      if (!stageCell) {
+        stageCell = document.createElement("div");
+        stageCell.className = "stage-cell-v37";
+        badge.parentNode.insertBefore(stageCell, badge);
+        stageCell.appendChild(badge);
+      }
+      if (status.parentElement !== stageCell) stageCell.appendChild(status);
+      row.classList.add("runner-row-v37");
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", enhanceRunnerRows);
+  new MutationObserver(enhanceRunnerRows).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+})();
