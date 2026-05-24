@@ -763,3 +763,199 @@ option { color: #0f172a; }
     font-size: .80rem;
   }
 }
+
+
+/* v25 visual tweaks */
+
+body{
+  background:#454b52;
+}
+
+.registration-panel input,
+.registration-panel select,
+.registration-panel .time-input{
+  background:#13212d;
+  border:1px solid rgba(0,255,210,.24);
+  color:#f4fbff;
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.02),
+    0 0 0 1px rgba(0,255,210,.03);
+}
+
+.registration-panel input:focus,
+.registration-panel select:focus{
+  border-color:rgba(0,255,210,.55);
+  box-shadow:0 0 0 3px rgba(0,255,210,.12);
+}
+
+.registration-panel label{
+  color:#dce7ee;
+}
+
+.time-shortcut{
+  background:
+    linear-gradient(135deg, rgba(0,255,210,.12), rgba(0,255,210,.04)),
+    #0c1822;
+  border:1px solid rgba(0,255,210,.32);
+}
+
+.primary-button,
+button.primary{
+  background:linear-gradient(90deg,#15ffd2,#0fbf9f);
+  color:#041218;
+}
+
+
+/* v26: lighter premium background + consistent glass form fields */
+:root {
+  --page-bg-1: #46505a;
+  --page-bg-2: #313a43;
+  --panel-fill: rgba(7, 17, 25, 0.86);
+  --field-fill: rgba(15, 31, 42, 0.92);
+  --field-border: rgba(126, 159, 170, 0.28);
+  --field-border-active: rgba(0, 232, 199, 0.62);
+  --accent-soft: rgba(0, 232, 199, 0.14);
+}
+
+html,
+body {
+  background:
+    radial-gradient(circle at 80% 0%, rgba(0, 210, 190, .18), transparent 32%),
+    radial-gradient(circle at 12% 16%, rgba(88, 120, 135, .34), transparent 28%),
+    linear-gradient(145deg, var(--page-bg-1), var(--page-bg-2)) !important;
+}
+
+body::before {
+  opacity: .20 !important;
+}
+
+.hero,
+.hero-card,
+.panel,
+.card,
+.sticky-card,
+.info-card,
+.status-card,
+.runner-card,
+.row,
+.registration-panel,
+.edit-panel {
+  background:
+    linear-gradient(145deg, rgba(10, 24, 34, .88), rgba(7, 16, 24, .84)) !important;
+  border-color: rgba(137, 170, 181, .22) !important;
+  box-shadow:
+    0 24px 70px rgba(3, 9, 14, .28),
+    inset 0 1px 0 rgba(255,255,255,.055) !important;
+}
+
+h1,
+.hero h1,
+.logo-title,
+.app-title {
+  font-family: Inter, Arial, sans-serif !important;
+  font-style: normal !important;
+  font-weight: 740 !important;
+  letter-spacing: -0.055em !important;
+  line-height: .94 !important;
+  text-transform: none !important;
+}
+
+.hero h1,
+.app-title {
+  font-size: clamp(2.25rem, 9.5vw, 4.15rem) !important;
+  max-width: 10ch;
+}
+
+.eyebrow,
+.kicker,
+.section-label,
+.label,
+.panel h2,
+.card-label {
+  color: rgba(0, 244, 209, .92) !important;
+  letter-spacing: .20em !important;
+}
+
+input,
+select,
+textarea,
+.registration-panel input,
+.registration-panel select,
+.edit-panel input,
+.edit-panel select,
+.field,
+.form-field,
+.time-field {
+  background:
+    linear-gradient(145deg, rgba(17, 35, 47, .98), rgba(10, 24, 35, .96)) !important;
+  border: 1px solid var(--field-border) !important;
+  color: #f7fbfd !important;
+  border-radius: 22px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 12px 26px rgba(0,0,0,.12) !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--field-border-active) !important;
+  box-shadow:
+    0 0 0 3px rgba(0, 232, 199, .11),
+    inset 0 1px 0 rgba(255,255,255,.07) !important;
+}
+
+.time-shortcut,
+.ghost-button,
+.secondary-button {
+  background:
+    linear-gradient(145deg, rgba(20, 44, 54, .95), rgba(11, 27, 37, .95)) !important;
+  border: 1px solid rgba(0, 232, 199, .32) !important;
+  color: #b9fff2 !important;
+  border-radius: 24px !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 14px 30px rgba(0,0,0,.16) !important;
+}
+
+.primary-button,
+button.primary,
+button[type="submit"],
+.register-button {
+  background:
+    linear-gradient(100deg, #10e8c3, #0eb190) !important;
+  color: #031318 !important;
+  border: 1px solid rgba(202,255,244,.18) !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 18px 44px rgba(0, 232, 199, .22),
+    inset 0 1px 0 rgba(255,255,255,.22) !important;
+}
+
+@media (max-width: 520px) {
+  body {
+    padding: 10px !important;
+  }
+
+  .hero h1,
+  .app-title {
+    font-size: clamp(2.15rem, 11vw, 3rem) !important;
+    letter-spacing: -0.06em !important;
+  }
+
+  .hero,
+  .hero-card {
+    border-radius: 28px !important;
+  }
+
+  input,
+  select,
+  .time-shortcut,
+  .ghost-button,
+  .secondary-button,
+  .primary-button,
+  button.primary,
+  button[type="submit"] {
+    border-radius: 20px !important;
+  }
+}
