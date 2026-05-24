@@ -517,3 +517,38 @@ boot();
     characterData: true
   });
 })();
+
+
+// v36 visual-only: place status under stage number on mobile and color statuses.
+(function () {
+  function decorateRunnerRows() {
+    document.querySelectorAll(".row, .runner-row, .runner-card").forEach((row) => {
+      const badge = row.querySelector(".badge, .stage-number, .num");
+      const status = row.querySelector(".row-status, .runner-status, .status");
+      if (!badge || !status) return;
+
+      const txt = (status.textContent || "").trim().toLowerCase();
+      status.classList.toggle("status-running", txt.includes("løper nå"));
+      status.classList.toggle("status-not-started", txt.includes("ikke startet"));
+
+      if (!badge.parentElement.classList.contains("stage-cell")) {
+        const wrapper = document.createElement("div");
+        wrapper.className = "stage-cell";
+        badge.parentNode.insertBefore(wrapper, badge);
+        wrapper.appendChild(badge);
+      }
+
+      const stageCell = row.querySelector(".stage-cell");
+      if (stageCell && status.parentElement !== stageCell) {
+        stageCell.appendChild(status);
+      }
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", decorateRunnerRows);
+  new MutationObserver(decorateRunnerRows).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+})();
