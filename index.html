@@ -1,64 +1,104 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cutrin Pace Control</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cutrin Pace Control</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="page">
-<header class="hero">
-  <div class="hero-left">
-    <div class="eyebrow">SANNTID • HASTIGHET • PRESISJON</div>
-    <h1>Cutrin Pace Control</h1>
-    <p>Mobil styring av vekslinger, fart og starttider for Trondheimstafetten.</p>
-    <button class="glass-button">Synk</button>
-  </div>
-  <div class="hero-right">
-    <div class="cutrin">CUTRIN NORGE</div>
-    <div class="logo">RC<span>ZERO</span></div>
-  </div>
-</header>
+  <main class="app-shell">
+    <header class="hero-card">
+      <div class="hero-gridline"></div>
+      <div class="hero-copy">
+        <div class="hero-topline">
+          <span class="live-pill"><span></span> LIVE</span>
+          <div class="brand-lockup" aria-label="Cutrin Norge og RC Zero">
+            <span class="cutrin-mark">CUTRIN NORGE</span>
+            <span class="brand-divider"></span>
+            <span class="rc-zero-logo">RC <em>ZERO</em></span>
+          </div>
+          <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
+        </div>
+        <p class="hero-kicker">SANNTID • HASTIGHET • PRESISJON</p>
+        <h1>Cutrin Pace Control</h1>
+        <p class="sub">Mobil styring av vekslinger, fart og starttider for Trondheimstafetten.</p>
+      </div>
+      <div class="hero-actions"><button id="resetButton" class="danger-button hidden" type="button">Start nytt løp</button><button id="syncButton" class="small-button" type="button">Synk</button></div>
+    </header>
 
-<section class="status-grid">
-  <div class="status-card">
-    <div class="label">NÅ LØPER</div>
-    <div class="big">1 - Endre</div>
-  </div>
-  <div class="status-card">
-    <div class="label">NESTE ESTIMERTE VEKSLING</div>
-    <div class="big center">14:40</div>
-  </div>
-</section>
+    <section id="setupWarning" class="warning hidden">
+      Kjører lokalt på denne enheten. Legg inn Supabase URL og nøkkel i <code>config.js</code> for live deling via én lenke.
+    </section>
 
-<section class="panel">
-<h2>Registrer veksling</h2>
+    <section class="quick-card panel">
+      <div>
+        <span class="quick-label">Nå løper</span>
+        <strong id="nextRunner">--</strong>
+      </div>
+      <div>
+        <span class="quick-label">Neste estimerte veksling</span>
+        <strong id="nextEstimate">--:--</strong>
+      </div>
+    </section>
 
-<label>Etappe og løper</label>
-<select>
-<option>1 - Endre (som ikke skal løpe)</option>
-</select>
+    <section class="panel registration-panel">
+      <h2>Registrer veksling</h2>
+      <div class="grid form-grid">
+        <label class="wide">Etappe og løper
+          <select id="finishStage"></select>
+        </label>
+        <label>Klokkeslett for veksling
+          <input id="finishTime" type="time" />
+          <small class="field-help">Dette er tiden løperen faktisk kom inn.</small>
+        </label>
+        <button id="nowButton" class="ghost-button time-shortcut" type="button">Ferdig nå (-1 min)</button>
+        <button id="finishButton" class="primary-button wide" type="button">Registrer veksling</button>
+      </div>
+      <p class="hint">Bruk «Ferdig nå (-1 min)» hvis løperen nettopp kom inn før du rakk å registrere.</p>
+    </section>
 
-<div class="time-grid">
-  <div>
-    <label>Klokkeslett for veksling</label>
-    <div class="time-box">13:43</div>
-  </div>
+    <section class="panel sticky-card">
+      <div class="section-head">
+        <h2>Starttider</h2>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
 
-  <button class="glass-button highlight">Ferdig nå (-1 min)</button>
-</div>
+    <section class="panel">
+      <h2>Endre løper / hastighet</h2>
+      <form id="runnerForm" class="grid form-grid">
+        <label class="wide">Velg etappe / løper
+          <select id="stage"></select>
+        </label>
+        <label>Navn
+          <input id="name" placeholder="Løpernavn" required />
+        </label>
+        <label>Hastighet km/t
+          <input id="speed" type="number" min="0" step="0.1" required />
+        </label>
+        <label>Distanse km
+          <input id="distance" type="number" min="0" step="0.001" required />
+        </label>
+        <label>Startsted
+          <input id="startPlace" placeholder="Startsted" />
+        </label>
+        <label class="wide">Veksling / mål
+          <input id="finishPlace" placeholder="Veksling / mål" />
+        </label>
+        <button class="primary-button wide" type="submit">Lagre endring</button>
+      </form>
+    </section>
 
-<p class="help">Bruk hvis løperen nettopp kom inn før du rakk å registrere.</p>
+      <footer class="link-footer" aria-label="Nyttige lenker">
+      <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank" rel="noopener">🌦️ Værmelding</a>
+      <a href="https://www.trondheimstafetten.no/loypa/etappebeskrivelser/" target="_blank" rel="noopener">🗺️ Løypekart</a>
+      <a href="https://www.facebook.com/messages/t/1718067952671647" target="_blank" rel="noopener">💬 Messenger-gruppe</a>
+    </footer>
 
-<button class="primary">Registrer veksling</button>
-</section>
-
-<footer class="footer-links">
-  <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank">🌦️ Værmelding</a>
-  <a href="https://www.trondheimstafetten.no/loypa/etappebeskrivelser/" target="_blank">🗺️ Løypekart</a>
-  <a href="https://www.facebook.com/messages/t/1718067952671647" target="_blank">💬 Messenger-gruppe</a>
-</footer>
-</div>
+  </main>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
