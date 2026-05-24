@@ -49,13 +49,14 @@
         <label class="wide">Etappe og løper
           <select id="finishStage"></select>
         </label>
-        <label>Klokkeslett
+        <label>Klokkeslett for veksling
           <input id="finishTime" type="time" />
+          <small class="field-help">Dette er tiden løperen faktisk kom inn.</small>
         </label>
-        <button id="nowButton" class="ghost-button" type="button">1 min siden</button>
+        <button id="nowButton" class="ghost-button time-shortcut" type="button">Sett klokke til 1 min siden</button>
         <button id="finishButton" class="primary-button wide" type="button">Registrer veksling</button>
       </div>
-      <p class="hint">Velg «1 min siden», så registrerer du veksling.</p>
+      <p class="hint">Trykk «1 min siden» hvis løperen kom inn før du rakk å registrere. Deretter trykker du «Registrer veksling».</p>
     </section>
 
     <section class="panel sticky-card">
@@ -70,9 +71,6 @@
       <form id="runnerForm" class="grid form-grid">
         <label class="wide">Velg etappe / løper
           <select id="stage"></select>
-        </label>
-        <label>Registrert inn
-          <input id="registeredFinish" type="time" readonly />
         </label>
         <label>Navn
           <input id="name" placeholder="Løpernavn" required />

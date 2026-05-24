@@ -616,3 +616,150 @@ option { color: #0f172a; }
   .quick-card { grid-template-columns: 1fr; gap: 16px; }
   .quick-card > div { align-items: flex-start; text-align: left; }
 }
+
+
+/* v24: tighter mobile start cards + clearer registration controls */
+.field-help {
+  display: block;
+  margin-top: -2px;
+  color: rgba(230,246,249,.55);
+  font-size: .72rem;
+  font-weight: 650;
+  letter-spacing: normal;
+  text-transform: none;
+  line-height: 1.3;
+}
+
+.time-shortcut {
+  min-height: 58px;
+  color: var(--green);
+  border: 1px solid rgba(0,255,210,.38);
+  background:
+    linear-gradient(135deg, rgba(0,245,184,.10), rgba(73,241,255,.045)),
+    rgba(2,8,14,.72);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.06), 0 12px 26px rgba(0,0,0,.18);
+}
+
+.registration-panel .hint {
+  max-width: 34rem;
+}
+
+@media (max-width: 430px) {
+  .list {
+    gap: 9px;
+  }
+
+  .row {
+    grid-template-columns: 36px minmax(0, 1fr) minmax(74px, auto);
+    gap: 8px;
+    padding: 10px;
+    border-radius: 18px;
+    align-items: center;
+  }
+
+  .badge {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+    font-size: .95rem;
+  }
+
+  .name {
+    font-size: .92rem;
+    line-height: 1.12;
+  }
+
+  .meta {
+    margin-top: 2px;
+    font-size: .68rem;
+    line-height: 1.16;
+  }
+
+  .row-status {
+    font-size: .66rem;
+  }
+
+  .actual-metrics {
+    margin-top: 5px;
+    padding: 4px 7px;
+    font-size: .63rem;
+    line-height: 1.15;
+    max-width: 100%;
+  }
+
+  .time-stack {
+    grid-column: auto;
+    min-width: 74px;
+    width: auto;
+    margin-top: 0;
+    gap: 2px;
+    text-align: right;
+    align-self: center;
+  }
+
+  .time-line {
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .time-line span {
+    font-size: .53rem;
+    letter-spacing: .08em;
+  }
+
+  .time-line strong {
+    font-size: .86rem;
+    line-height: 1.05;
+  }
+
+  .start-line strong {
+    font-size: 1.04rem;
+  }
+
+  .panel.sticky-card {
+    padding: 14px;
+  }
+
+  .registration-panel h2 {
+    margin-bottom: 12px;
+  }
+
+  .time-shortcut {
+    font-size: .92rem;
+    min-height: 56px;
+  }
+}
+
+@media (max-width: 360px) {
+  .row {
+    grid-template-columns: 32px minmax(0, 1fr) minmax(66px, auto);
+    gap: 7px;
+    padding: 9px;
+  }
+
+  .badge {
+    width: 31px;
+    height: 31px;
+    font-size: .86rem;
+  }
+
+  .name {
+    font-size: .86rem;
+  }
+
+  .meta {
+    font-size: .64rem;
+  }
+
+  .time-stack {
+    min-width: 66px;
+  }
+
+  .start-line strong {
+    font-size: .96rem;
+  }
+
+  .time-line strong {
+    font-size: .80rem;
+  }
+}
