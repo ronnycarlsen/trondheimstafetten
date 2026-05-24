@@ -156,6 +156,13 @@ function fillSelects() {
   }
 }
 
+
+function selectCurrentRunnerForRegistration() {
+  const rows = calculate();
+  const next = rows.find(r => r.status !== "done");
+  if (next && $("finishStage")) $("finishStage").value = String(next.stage);
+}
+
 function fillForm(stage) {
   const r = runners.find(x => x.stage === Number(stage));
   if (!r) return;
@@ -272,6 +279,7 @@ async function boot() {
   const hasRemote = await initSupabase();
   if (hasRemote) await sync();
   render();
+  selectCurrentRunnerForRegistration();
 
   $("stage").addEventListener("change", e => fillForm(e.target.value));
   $("runnerForm").addEventListener("submit", async (e) => {
@@ -303,6 +311,7 @@ async function boot() {
     saveLocal();
     await saveActualRemote(stage, time);
     render();
+    selectCurrentRunnerForRegistration();
   });
 
   $("syncButton").addEventListener("click", sync);

@@ -409,3 +409,123 @@ input:focus, select:focus, textarea:focus { border-color: var(--accent); box-sha
   .hero-card { min-height: 170px; padding: 20px; }
   .hero-card h1 { margin-top: 18px; }
 }
+
+
+/* v9: Android Edge/mobile layout fixes + richer Cutrin hero */
+body {
+  background:
+    radial-gradient(circle at 10% -10%, rgba(34, 197, 94, 0.30), transparent 24rem),
+    radial-gradient(circle at 90% 0%, rgba(56, 189, 248, 0.40), transparent 26rem),
+    linear-gradient(180deg, #07111f 0%, #0b1b2d 42%, #eef5fb 42%, #f8fafc 100%);
+}
+
+.hero-card {
+  position: relative;
+  overflow: hidden;
+  min-height: 170px;
+  padding: 20px;
+  border-radius: 32px;
+  background:
+    linear-gradient(135deg, rgba(8, 13, 30, 0.96), rgba(7, 79, 105, 0.88) 55%, rgba(17, 94, 89, 0.88)),
+    radial-gradient(circle at 12% 10%, rgba(255,255,255,.22), transparent 15rem);
+  border: 1px solid rgba(255, 255, 255, .22);
+  box-shadow: 0 22px 70px rgba(2, 6, 23, .32);
+}
+
+.hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(120deg, rgba(255,255,255,.18), transparent 28%, transparent 68%, rgba(255,255,255,.10)),
+    repeating-linear-gradient(135deg, rgba(255,255,255,.07) 0 1px, transparent 1px 12px);
+  opacity: .45;
+  pointer-events: none;
+}
+
+.hero-card::after {
+  content: "";
+  position: absolute;
+  right: -54px;
+  top: -58px;
+  width: 170px;
+  height: 170px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(56,189,248,.42), rgba(34,197,94,.10) 55%, transparent 68%);
+  filter: blur(.2px);
+  pointer-events: none;
+}
+
+.hero-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card h1 {
+  max-width: 12ch;
+  margin: 16px 0 8px;
+  font-size: clamp(1.75rem, 6.1vw, 2.25rem);
+  line-height: .98;
+  letter-spacing: -.055em;
+}
+
+.kicker {
+  display: inline-block;
+  margin: 12px 0 0;
+  padding: 0;
+  color: rgba(255,255,255,.84);
+  font-size: .72rem;
+  font-weight: 950;
+  letter-spacing: .18em;
+}
+
+.live-pill {
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.18), 0 10px 24px rgba(2,6,23,.18);
+}
+
+.hero-actions {
+  margin-top: 16px;
+}
+
+#syncButton {
+  border: 1px solid rgba(255,255,255,.26);
+  background: rgba(255,255,255,.92);
+  box-shadow: 0 12px 22px rgba(2, 6, 23, .16);
+}
+
+.quick-card {
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, rgba(10,20,38,.98), rgba(8,47,73,.92)),
+    radial-gradient(circle at 90% 0%, rgba(56,189,248,.24), transparent 13rem);
+}
+
+.quick-card strong {
+  font-size: 1.08rem;
+}
+
+.registration-panel {
+  margin-top: 14px !important;
+  position: relative;
+  z-index: 2;
+  overflow: visible;
+}
+
+.registration-panel h2 {
+  font-size: 1.26rem;
+}
+
+.hint {
+  font-size: .86rem;
+}
+
+@media (max-width: 420px) {
+  .app-shell { padding: 14px 12px 34px; }
+  .hero-card { min-height: 170px; padding: 20px; border-radius: 28px; }
+  .hero-card h1 { font-size: clamp(1.7rem, 8vw, 2.1rem); }
+  .quick-card { grid-template-columns: 1fr; gap: 14px; }
+  .registration-panel { margin-top: 14px !important; }
+}
