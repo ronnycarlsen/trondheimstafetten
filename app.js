@@ -17,6 +17,7 @@ let runners = [];
 let actuals = {};
 let supabaseClient = null;
 let finishTimeManualOverride = false;
+let finishStageManualOverride = false;
 let actualMeta = {};
 const cfg = window.STAFETT_CONFIG || {};
 const ADMIN_CODE = cfg.ADMIN_CODE || "ronny";
@@ -265,10 +266,20 @@ function fillSelects() {
 }
 
 
-function selectCurrentRunnerForRegistration() {
+function selectCurrentRunnerForRegistration(force = false) {
+  if (!force && finishStageManualOverride) return;
   const rows = calculate();
   const next = nextStageToRegister(rows);
   if (next && $("finishStage")) $("finishStage").value = String(next.stage);
+}
+
+function selectStageAfterRegistered(stage) {
+  const sorted = [...runners].sort((a, b) => a.stage - b.stage);
+  const next = sorted.find(r => r.stage > Number(stage));
+  if (next && $("finishStage")) {
+    $("finishStage").value = String(next.stage);
+  }
+  finishStageManualOverride = false;
 }
 
 function fillForm(stage) {
@@ -291,7 +302,7 @@ function render() {
   const rows = calculate();
   const next = nextStageToRegister(rows);
   if ($("nextRunner")) $("nextRunner").textContent = next ? runnerLabel(next) : "Alle registrert";
-  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.startTime) : "Ferdig";
+  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.finishEstimate) : "Ferdig";
   $("list").innerHTML = rows.map(r => {
     const statusText = r.status === "done"
       ? "Registrert"
@@ -390,7 +401,6 @@ async function sync(options = {}) {
     await loadRemote();
     saveLocal();
     render();
-    selectCurrentRunnerForRegistration();
   } catch (e) {
     if (!silent) alert("Kunne ikke synkronisere: " + e.message);
     console.warn("Kunne ikke synkronisere", e);
@@ -404,7 +414,7 @@ async function boot() {
   const hasRemote = await initSupabase();
   if (hasRemote) await sync({ silent: true });
   render();
-  selectCurrentRunnerForRegistration();
+  selectCurrentRunnerForRegistration(true);
 
   $("stage").addEventListener("change", e => fillForm(e.target.value));
   $("runnerForm").addEventListener("submit", async (e) => {
@@ -421,6 +431,10 @@ async function boot() {
     saveLocal();
     await saveRunnerRemote(runner);
     render();
+  });
+
+  $("finishStage").addEventListener("change", () => {
+    finishStageManualOverride = true;
   });
 
   $("finishTime").addEventListener("input", () => {
@@ -445,6 +459,8 @@ async function boot() {
     saveLocal();
     await saveActualRemote(stage, time);
     await sync({ silent: true });
+    selectStageAfterRegistered(stage);
+    render();
     fillForm($("stage").value || stage);
   });
 
