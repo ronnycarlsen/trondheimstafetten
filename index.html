@@ -1,60 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="no">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cutrin Pace Control</title>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Cutrin Pace Control</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-<div class="app">
-  <header class="hero">
-    <div>
-      <div class="eyebrow">SANNTID • HASTIGHET • PRESISJON</div>
-      <h1>Cutrin Pace Control</h1>
-    </div>
-    <div class="brand">
-      <div class="cutrin">CUTRIN NORGE</div>
-      <div class="rc">RC <span>ZERO</span></div>
-    </div>
-  </header>
-
-  <section class="cards">
-    <div class="card">
-      <div class="label">NÅ LØPER</div>
-      <div class="value">4 - Sørensen</div>
-    </div>
-
-    <div class="card">
-      <div class="label">NESTE ESTIMERTE VEKSLING</div>
-      <div class="time">15:00</div>
-    </div>
-  </section>
-
-  <section class="content">
-    <div class="left">
-      <h2>Starttider</h2>
-      <div class="runner active">
-        <div class="num">3</div>
-        <div class="info">
-          <h3>Jan Are</h3>
-          <p>Dakatoparken → Dronning Mauds Minne</p>
-          <small>1.0 km • estimert 10 km/t</small>
-        </div>
-        <div class="times">
-          <div>START <strong>14:59</strong></div>
-          <div>ESTIMERT INN <strong>15:05</strong></div>
-        </div>
+  <main class="app-shell">
+    <header class="hero-card">
+      <div class="hero-mark" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <p class="hero-kicker">Sanntid • Hastighet • Presisjon</p>
+        <h1>Cutrin Pace Control</h1>
       </div>
-    </div>
+      <div class="brand-stack" aria-label="Cutrin Norge og RC Zero">
+        <span class="cutrin-mark">Cutrin Norge</span>
+        <span class="brand-divider"></span>
+        <span class="rc-logo">RC <small>ZERO</small></span>
+      </div>
+      <div class="hero-actions">
+        <span class="live-pill"><span></span>LIVE</span>
+        <button id="syncButton" class="small-button" type="button">Synk</button>
+        <button id="resetButton" class="danger-button hidden" type="button">Start nytt løp</button>
+        <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
+      </div>
+    </header>
 
-    <div class="right">
+    <section id="setupWarning" class="warning hidden">
+      Kjører lokalt på denne enheten. Legg inn Supabase URL og nøkkel i <code>config.js</code> for live deling via én lenke.
+    </section>
+
+    <section class="quick-grid">
+      <article class="quick-card panel runner-now-card">
+        <div class="corner-accent"></div>
+        <span class="quick-label">Nå løper:</span>
+        <strong id="nextRunner">--</strong>
+      </article>
+      <article class="quick-card panel estimate-card">
+        <div class="corner-accent"></div>
+        <span class="quick-label">Neste estimerte veksling:</span>
+        <strong id="nextEstimate">--:--</strong>
+      </article>
+    </section>
+
+    <section class="panel start-panel">
+      <div class="section-head">
+        <h2>Starttider</h2>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+
+    <section class="panel registration-panel">
       <h2>Registrer veksling</h2>
-      <button>1 min siden</button>
-      <button class="primary">Registrer veksling</button>
-    </div>
-  </section>
-</div>
-<script src="app.js"></script>
+      <div class="grid form-grid">
+        <label class="wide">Etappe og løper
+          <select id="finishStage"></select>
+        </label>
+        <label>Klokkeslett
+          <input id="finishTime" type="time" />
+        </label>
+        <button id="nowButton" class="ghost-button" type="button">1 min siden</button>
+        <button id="finishButton" class="primary-button wide" type="button">Registrer veksling</button>
+      </div>
+      <p class="hint">Velg «1 min siden», så registrerer du veksling.</p>
+    </section>
+
+    <section class="panel edit-panel">
+      <h2>Endre løper / hastighet</h2>
+      <form id="runnerForm" class="grid form-grid">
+        <label class="wide">Velg etappe / løper
+          <select id="stage"></select>
+        </label>
+        <label>Registrert inn
+          <input id="registeredFinish" type="time" readonly />
+        </label>
+        <label>Navn
+          <input id="name" placeholder="Løpernavn" required />
+        </label>
+        <label>Hastighet km/t
+          <input id="speed" type="number" min="0" step="0.1" required />
+        </label>
+        <label>Distanse km
+          <input id="distance" type="number" min="0" step="0.001" required />
+        </label>
+        <label>Startsted
+          <input id="startPlace" placeholder="Startsted" />
+        </label>
+        <label class="wide">Veksling / mål
+          <input id="finishPlace" placeholder="Veksling / mål" />
+        </label>
+        <button class="primary-button wide" type="submit">Lagre endring</button>
+      </form>
+    </section>
+
+    <section class="info-strip panel">
+      <div><strong>Sanntidsdata</strong><span>Oppdateres automatisk hvert 20. sekund</span></div>
+      <div><strong>Presisjon i hvert steg</strong><span>Nøyaktige beregninger basert på faktiske registreringer</span></div>
+      <div><strong>Kontroll på farten</strong><span>Optimaliser laget ditt hele veien til mål</span></div>
+    </section>
+
+    <footer class="site-footer">
+      <a class="weather-link" href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank" rel="noopener noreferrer">Se værmelding</a>
+    </footer>
+  </main>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
