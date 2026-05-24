@@ -1,87 +1,80 @@
 <!doctype html>
 <html lang="no">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Trondheimstafetten starttider</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trondheimstafetten Live</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="config.js"></script>
 </head>
 <body>
-  <main class="app">
-    <header class="hero">
-      <div class="hero-copy">
-        <p class="kicker">Trondheimstafetten live</p>
-        <h1>Starttider og veksling</h1>
-        <p class="sub">Velg etappe og løper, registrer faktisk vekslingstid, og se nye starttider beregnet automatisk.</p>
+  <main class="app-shell">
+    <section class="hero-card">
+      <div class="hero-topline">
+        <span class="live-pill"><span></span> LIVE</span>
+        <span id="syncStatus" class="sync-status">Klar</span>
       </div>
-      <button id="syncButton" class="ghost pill" type="button">Synk</button>
-    </header>
-
-    <section id="setupWarning" class="warning hidden">
-      Kjører lokalt på denne enheten. Legg inn Supabase URL og nøkkel i <code>config.js</code> for live deling via én lenke.
+      <h1>Trondheimstafetten</h1>
+      <p>Registrer veksling raskt. Starttider beregnes automatisk fra distanse og estimert hastighet.</p>
     </section>
 
-    <section class="quick-card">
-      <div>
-        <span class="quick-label">Neste åpne etappe</span>
-        <strong id="nextRunner">--</strong>
+    <section class="panel registration-panel">
+      <div class="section-title">
+        <div>
+          <p class="eyebrow">Registrering</p>
+          <h2>Velg løper og registrer veksling</h2>
+        </div>
       </div>
-      <div>
-        <span class="quick-label">Neste estimerte veksling</span>
-        <strong id="nextEstimate">--:--</strong>
+
+      <label class="field-label" for="runnerSelect">Etappe og løper</label>
+      <select id="runnerSelect" class="premium-input"></select>
+
+      <div class="time-row">
+        <div>
+          <label class="field-label" for="actualTime">Vekslingstid</label>
+          <input id="actualTime" class="premium-input" type="datetime-local" />
+        </div>
+        <button id="oneMinuteAgoBtn" class="ghost-button" type="button">Sett til 1 min siden</button>
       </div>
+
+      <button id="registerBtn" class="primary-button" type="button">Registrer veksling</button>
+      <p class="helper-text">Tips: bruk “1 min siden” når løperen kom inn før du rakk å registrere.</p>
     </section>
 
-    <section class="card accent-card">
-      <h2>Registrer faktisk vekslingstid</h2>
-      <div class="grid">
-        <label class="wide">Etappe / løper som kommer inn
-          <select id="finishStage"></select>
-        </label>
-        <label>Klokkeslett
-          <input id="finishTime" type="time" />
-        </label>
-        <button id="nowButton" class="secondary" type="button">Bruk nå</button>
-        <button id="finishButton" class="primary wide" type="button">Registrer veksling</button>
-      </div>
-      <p class="hint">Dropdownen viser både etappenummer og navn, slik at det er enklere å registrere riktig løper.</p>
+    <section class="panel next-panel">
+      <p class="eyebrow">Neste</p>
+      <div id="nextRunner" class="next-runner">Laster...</div>
     </section>
 
-    <section class="card">
-      <h2>Endre løper / hastighet</h2>
-      <form id="runnerForm" class="grid">
-        <label class="wide">Velg etappe / løper
-          <select id="stage"></select>
-        </label>
-        <label>Navn
-          <input id="name" placeholder="Løpernavn" required />
-        </label>
-        <label>Hastighet km/t
-          <input id="speed" type="number" min="0" step="0.1" required />
-        </label>
-        <label>Distanse km
-          <input id="distance" type="number" min="0" step="0.001" required />
-        </label>
-        <label>Startsted
-          <input id="startPlace" placeholder="Startsted" />
-        </label>
-        <label class="wide">Veksling / mål
-          <input id="finishPlace" placeholder="Veksling / mål" />
-        </label>
-        <button class="primary wide" type="submit">Lagre endring</button>
-      </form>
+    <section class="panel">
+      <div class="section-title compact">
+        <div>
+          <p class="eyebrow">Løpere</p>
+          <h2>Oppsett</h2>
+        </div>
+        <button id="addRunnerBtn" class="small-button" type="button">+ Legg til</button>
+      </div>
+      <div id="runnerList" class="runner-list"></div>
     </section>
 
-    <section class="card sticky-card">
-      <div class="section-head">
-        <h2>Starttider</h2>
-        <button id="resetButton" class="danger" type="button">Nullstill tider</button>
+    <section class="panel">
+      <div class="section-title compact">
+        <div>
+          <p class="eyebrow">Tider</p>
+          <h2>Live starttider</h2>
+        </div>
+        <button id="syncBtn" class="small-button" type="button">Synk</button>
       </div>
-      <div id="list" class="list"></div>
+      <div id="timeline" class="timeline"></div>
+    </section>
+
+    <section id="adminTools" class="admin-tools hidden">
+      <button id="resetRaceBtn" class="danger-button" type="button">Start nytt løp</button>
+      <p>Skjult knapp. Vises kun med <code>?admin=ronny</code>.</p>
     </section>
   </main>
-  <script src="config.js"></script>
+
   <script src="app.js"></script>
 </body>
 </html>
