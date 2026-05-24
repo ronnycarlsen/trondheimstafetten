@@ -2165,3 +2165,309 @@ body {
     font-size: 1.12rem !important;
   }
 }
+
+/* v47: premium alignment pass - precise clock/button balance + cleaner start cards */
+/* Registration: make time and "Ferdig nå" feel like one matched control set */
+.registration-panel input[type="time"] {
+  min-height: 78px !important;
+  height: 78px !important;
+  padding: 16px 58px 28px 58px !important;
+  text-align: center !important;
+  text-align-last: center !important;
+  font-size: 1.44rem !important;
+  line-height: 1 !important;
+  font-weight: 900 !important;
+  letter-spacing: .015em !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.registration-panel input[type="time"]::-webkit-datetime-edit,
+.registration-panel input[type="time"]::-webkit-datetime-edit-fields-wrapper {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  position: absolute !important;
+  right: 18px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 24px !important;
+  height: 24px !important;
+  padding: 9px !important;
+  margin: 0 !important;
+}
+
+.registration-panel label:has(#finishTime)::after {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 13px !important;
+  text-align: center !important;
+  font-size: .73rem !important;
+  letter-spacing: .01em !important;
+}
+
+.registration-panel .time-shortcut {
+  min-height: 78px !important;
+  height: 78px !important;
+  border-radius: 24px !important;
+  font-size: 1.44rem !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+  letter-spacing: .01em !important;
+  gap: 5px !important;
+}
+
+.registration-panel .time-shortcut .button-sub {
+  font-size: .70em !important;
+  line-height: 1 !important;
+  opacity: .88 !important;
+  margin-top: 0 !important;
+}
+
+.registration-panel .hint {
+  max-width: 30rem !important;
+  margin-top: 15px !important;
+  font-size: .84rem !important;
+  line-height: 1.35 !important;
+  color: rgba(226,238,242,.68) !important;
+}
+
+.registration-panel .hint::before,
+.registration-panel .hint::after {
+  width: 34px !important;
+  margin-left: 9px !important;
+  margin-right: 9px !important;
+  opacity: .55 !important;
+}
+
+/* Start cards: compact, but with stronger time tiles like desktop */
+.sticky-card {
+  padding: 16px !important;
+}
+
+.list {
+  gap: 9px !important;
+}
+
+.row {
+  grid-template-columns: 58px minmax(0, 1fr) minmax(148px, auto) !important;
+  gap: 10px !important;
+  padding: 10px 11px !important;
+  border-radius: 20px !important;
+}
+
+.stage-status-cell {
+  min-width: 52px !important;
+  gap: 4px !important;
+}
+
+.stage-status-cell .badge {
+  width: 38px !important;
+  height: 38px !important;
+  border-radius: 13px !important;
+}
+
+.stage-status-cell .row-status {
+  font-size: .58rem !important;
+  max-width: 54px !important;
+}
+
+.runner-details .name {
+  font-size: 1rem !important;
+  line-height: 1.10 !important;
+}
+
+.runner-details .meta {
+  font-size: .72rem !important;
+  line-height: 1.16 !important;
+  margin-top: 2px !important;
+}
+
+.time-stack {
+  min-width: 148px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 6px !important;
+}
+
+.time-line {
+  min-height: 52px !important;
+  padding: 7px 8px !important;
+  border: 1px solid rgba(0,232,199,.09) !important;
+  background: linear-gradient(145deg, rgba(3,11,18,.46), rgba(4,14,22,.34)) !important;
+  border-radius: 14px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: center !important;
+  text-align: center !important;
+  gap: 4px !important;
+}
+
+.time-line span {
+  font-size: .59rem !important;
+  line-height: 1 !important;
+  letter-spacing: .11em !important;
+  font-weight: 950 !important;
+}
+
+.time-line strong,
+.start-line strong {
+  font-size: 1.20rem !important;
+  line-height: 1 !important;
+  font-weight: 950 !important;
+  letter-spacing: -.02em !important;
+  font-variant-numeric: tabular-nums !important;
+}
+
+.finish-line strong,
+.actual-finish strong {
+  color: var(--green) !important;
+}
+
+@media (max-width: 520px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    min-height: 76px !important;
+    height: 76px !important;
+    font-size: 1.34rem !important;
+    border-radius: 22px !important;
+  }
+
+  .registration-panel input[type="time"] {
+    padding-left: 54px !important;
+    padding-right: 54px !important;
+  }
+
+  .registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+    right: 16px !important;
+    width: 22px !important;
+    height: 22px !important;
+    padding: 8px !important;
+  }
+
+  .registration-panel label:has(#finishTime)::after {
+    bottom: 12px !important;
+    font-size: .70rem !important;
+  }
+
+  .registration-panel .hint {
+    max-width: 21rem !important;
+    font-size: .82rem !important;
+    line-height: 1.32 !important;
+  }
+
+  .registration-panel .hint::before,
+  .registration-panel .hint::after {
+    width: 26px !important;
+    margin-left: 7px !important;
+    margin-right: 7px !important;
+  }
+
+  .sticky-card {
+    padding: 13px !important;
+  }
+
+  .list {
+    gap: 8px !important;
+  }
+
+  .row {
+    grid-template-columns: 48px minmax(0, 1fr) !important;
+    gap: 7px 9px !important;
+    padding: 9px !important;
+    border-radius: 17px !important;
+  }
+
+  .stage-status-cell {
+    min-width: 44px !important;
+    gap: 3px !important;
+  }
+
+  .stage-status-cell .badge {
+    width: 34px !important;
+    height: 34px !important;
+    border-radius: 11px !important;
+    font-size: .95rem !important;
+  }
+
+  .stage-status-cell .row-status {
+    font-size: .53rem !important;
+    line-height: 1.02 !important;
+    max-width: 44px !important;
+  }
+
+  .runner-details .name {
+    font-size: .95rem !important;
+    line-height: 1.08 !important;
+  }
+
+  .runner-details .meta {
+    font-size: .66rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .time-stack {
+    grid-column: 1 / -1 !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 7px !important;
+    margin-top: 2px !important;
+  }
+
+  .time-line {
+    min-height: 48px !important;
+    padding: 7px 6px !important;
+    border-radius: 13px !important;
+    gap: 4px !important;
+  }
+
+  .time-line span {
+    font-size: .58rem !important;
+    letter-spacing: .10em !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1.18rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    font-size: 1.26rem !important;
+  }
+
+  .row {
+    grid-template-columns: 44px minmax(0, 1fr) !important;
+    padding: 8px !important;
+  }
+
+  .runner-details .name {
+    font-size: .91rem !important;
+  }
+
+  .runner-details .meta {
+    font-size: .63rem !important;
+  }
+
+  .time-line {
+    min-height: 46px !important;
+  }
+
+  .time-line strong,
+  .start-line strong {
+    font-size: 1.10rem !important;
+  }
+}
