@@ -929,3 +929,8 @@ body {
 
   #syncButton::after { content: ""; }
 }
+
+
+/* v12: same sync label on desktop/mobile + auto-updated registration time */
+#syncButton::after { content: "" !important; }
+#finishTime { transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }

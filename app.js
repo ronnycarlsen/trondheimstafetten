@@ -16,6 +16,7 @@ const STORE_KEY = "trondheimstafetten-state-v2";
 let runners = [];
 let actuals = {};
 let supabaseClient = null;
+let finishTimeManualOverride = false;
 const cfg = window.STAFETT_CONFIG || {};
 const ADMIN_CODE = cfg.ADMIN_CODE || "ronny";
 const params = new URLSearchParams(window.location.search);
@@ -25,6 +26,20 @@ const $ = (id) => document.getElementById(id);
 
 function configured() {
   return Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
+}
+
+
+function currentMinusOneMinute() {
+  const d = new Date(Date.now() - 60 * 1000);
+  return `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+}
+
+function refreshFinishTime(force = false) {
+  const input = $("finishTime");
+  if (!input) return;
+  if (force || (!finishTimeManualOverride && document.activeElement !== input)) {
+    input.value = currentMinusOneMinute();
+  }
 }
 
 function toMinutes(time) {
@@ -301,9 +316,17 @@ async function boot() {
     render();
   });
 
+  $("finishTime").addEventListener("input", () => {
+    finishTimeManualOverride = true;
+  });
+
+  $("finishTime").addEventListener("change", () => {
+    finishTimeManualOverride = true;
+  });
+
   $("nowButton").addEventListener("click", () => {
-    const d = new Date(Date.now() - 60 * 1000);
-    $("finishTime").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+    finishTimeManualOverride = false;
+    refreshFinishTime(true);
   });
 
   $("finishButton").addEventListener("click", async () => {
@@ -326,14 +349,12 @@ async function boot() {
     render();
   });
 
-  if (!$("finishTime").value) {
-    const d = new Date(Date.now() - 60 * 1000);
-    $("finishTime").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
-  }
+  refreshFinishTime(true);
 
-  if (supabaseClient) {
-    setInterval(() => sync({ silent: true }), 20000);
-  }
+  setInterval(() => {
+    refreshFinishTime(false);
+    if (supabaseClient) sync({ silent: true });
+  }, 20000);
 }
 
 boot();
