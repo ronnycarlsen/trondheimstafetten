@@ -17,6 +17,7 @@ let runners = [];
 let actuals = {};
 let supabaseClient = null;
 let finishTimeManualOverride = false;
+let actualMeta = {};
 const cfg = window.STAFETT_CONFIG || {};
 const ADMIN_CODE = cfg.ADMIN_CODE || "ronny";
 const params = new URLSearchParams(window.location.search);
@@ -71,6 +72,17 @@ function legMinutes(runner) {
 }
 
 function latestRegisteredStage() {
+  // Bruk siste registrering i tid, ikke første manglende etappe.
+  // Dette gjør at appen tåler at noen glemmer en tidligere veksling.
+  const entries = Object.entries(actualMeta)
+    .map(([stage, meta]) => ({ stage: Number(stage), updatedAt: meta?.updated_at || "" }))
+    .filter(x => Number.isFinite(x.stage) && x.updatedAt);
+
+  if (entries.length) {
+    entries.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return entries[0].stage;
+  }
+
   const stages = Object.keys(actuals)
     .map(Number)
     .filter(Number.isFinite);
@@ -79,7 +91,7 @@ function latestRegisteredStage() {
 
 function nextStageToRegister(sorted = [...runners].sort((a, b) => a.stage - b.stage)) {
   const latest = latestRegisteredStage();
-  return sorted.find(r => r.stage > latest && !actuals[r.stage]) || sorted.find(r => !actuals[r.stage]) || null;
+  return sorted.find(r => r.stage === latest + 1) || sorted.find(r => r.stage > latest) || sorted[0] || null;
 }
 
 function calculate() {
@@ -98,7 +110,7 @@ function calculate() {
 }
 
 function saveLocal() {
-  localStorage.setItem(STORE_KEY, JSON.stringify({ runners, actuals }));
+  localStorage.setItem(STORE_KEY, JSON.stringify({ runners, actuals, actualMeta }));
 }
 
 function loadLocal() {
@@ -113,6 +125,7 @@ function loadLocal() {
     const state = JSON.parse(raw);
     runners = state.runners?.length ? state.runners : DEFAULT_RUNNERS;
     actuals = state.actuals || {};
+    actualMeta = state.actualMeta || {};
   } catch {
     runners = DEFAULT_RUNNERS;
     actuals = {};
@@ -144,10 +157,11 @@ async function loadRemote() {
   }
   const res = await supabaseClient
     .from("stafett_actuals")
-    .select("stage, finish_time")
+    .select("stage, finish_time, updated_at")
     .eq("event_id", cfg.EVENT_ID);
   if (res.error) throw res.error;
   actuals = Object.fromEntries((res.data || []).map(x => [x.stage, x.finish_time.slice(0, 5)]));
+  actualMeta = Object.fromEntries((res.data || []).map(x => [x.stage, { updated_at: x.updated_at || "" }]));
 }
 
 async function saveRunnerRemote(runner) {
@@ -157,7 +171,7 @@ async function saveRunnerRemote(runner) {
 
 async function saveActualRemote(stage, finishTime) {
   if (!supabaseClient) return;
-  await supabaseClient.from("stafett_actuals").upsert({ event_id: cfg.EVENT_ID, stage, finish_time: finishTime }, { onConflict: "event_id,stage" });
+  await supabaseClient.from("stafett_actuals").upsert({ event_id: cfg.EVENT_ID, stage, finish_time: finishTime, updated_at: new Date().toISOString() }, { onConflict: "event_id,stage" });
 }
 
 async function resetRemote() {
@@ -349,6 +363,7 @@ async function boot() {
     const time = $("finishTime").value;
     if (!time) return alert("Velg klokkeslett først");
     actuals[stage] = time;
+    actualMeta[stage] = { updated_at: new Date().toISOString() };
     saveLocal();
     await saveActualRemote(stage, time);
     await sync({ silent: true });
@@ -359,6 +374,7 @@ async function boot() {
     if (!isAdmin) return alert("Admin-lenke kreves");
     if (!confirm("Start nytt løp? Dette sletter registrerte vekslingstider, men beholder løperlisten.")) return;
     actuals = {};
+    actualMeta = {};
     saveLocal();
     await resetRemote();
     render();
