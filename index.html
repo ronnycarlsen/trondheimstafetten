@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cutrin Pace Control</title>
-  <link rel="stylesheet" href="style.css?v=49" />
+  <link rel="stylesheet" href="style.css?v=50" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -56,7 +56,11 @@
         <button id="nowButton" class="ghost-button time-shortcut" type="button">Ferdig nå <span class="button-sub">(-1 min)</span></button>
         <button id="finishButton" class="primary-button wide" type="button">Registrer veksling</button>
       </div>
-      <p class="hint">Bruk «Ferdig nå <span class="button-sub">(-1 min)</span>» + «Registrer veksling» hvis du nettopp vekslet.</p>
+      <p class="hint relay-hint">
+        <span>Bruk «Ferdig nå»</span>
+        <span class="hint-plus">+</span>
+        <span>«Registrer veksling» like etter veksling.</span>
+      </p>
     </section>
 
     <section class="panel sticky-card">
@@ -101,6 +105,6 @@
 
   </main>
   <script src="config.js"></script>
-  <script src="app.js?v=49"></script>
+  <script src="app.js?v=50"></script>
 </body>
 </html>

@@ -2013,3 +2013,59 @@ body {
     font-size: 1.12rem !important;
   }
 }
+
+
+/* v50: clean premium three-line registration hint */
+.registration-panel .relay-hint,
+.registration-panel p.hint.relay-hint {
+  width: min(100%, 34rem) !important;
+  margin: 18px auto 0 !important;
+  padding: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 1px !important;
+  text-align: center !important;
+  color: rgba(232, 243, 247, 0.84) !important;
+  font-size: 0.92rem !important;
+  font-weight: 620 !important;
+  line-height: 1.14 !important;
+  letter-spacing: -0.01em !important;
+}
+
+.registration-panel .relay-hint::before,
+.registration-panel .relay-hint::after,
+.registration-panel p.hint.relay-hint::before,
+.registration-panel p.hint.relay-hint::after {
+  content: none !important;
+  display: none !important;
+}
+
+.registration-panel .relay-hint span {
+  display: block !important;
+}
+
+.registration-panel .relay-hint .hint-plus {
+  color: rgba(202, 255, 244, 0.72) !important;
+  font-size: 0.86rem !important;
+  font-weight: 760 !important;
+  line-height: 0.92 !important;
+  margin: -1px 0 !important;
+}
+
+@media (max-width: 520px) {
+  .registration-panel .relay-hint,
+  .registration-panel p.hint.relay-hint {
+    margin-top: 16px !important;
+    font-size: 0.86rem !important;
+    line-height: 1.12 !important;
+    gap: 0 !important;
+    max-width: 19.5rem !important;
+  }
+
+  .registration-panel .relay-hint .hint-plus {
+    font-size: 0.82rem !important;
+    line-height: 0.88 !important;
+  }
+}
