@@ -305,3 +305,96 @@ h2 {
   .time-row { flex-direction: column; align-items: stretch; }
   .ghost-button { width: 100%; }
 }
+
+/* Compatibility styling for existing Supabase/config.js setup */
+.app-shell { width: min(100%, 560px); margin: 0 auto; padding: 18px 14px 40px; }
+.hero-copy { display: contents; }
+.kicker, .eyebrow, .quick-label { text-transform: uppercase; letter-spacing: .12em; font-size: .72rem; font-weight: 800; color: rgba(255,255,255,.72); }
+.panel .eyebrow, .quick-card .quick-label { color: #64748b; }
+.hero-actions { display: flex; gap: 10px; margin-top: 18px; }
+.quick-card { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.quick-card strong { display:block; font-size:1.02rem; margin-top:4px; }
+.card, .panel { margin-top: 14px; }
+.form-grid, .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.wide { grid-column: 1 / -1; }
+label { display:flex; flex-direction:column; gap:7px; color:#334155; font-weight:700; font-size:.86rem; }
+input, select, textarea { width:100%; border:1px solid var(--line); border-radius:16px; padding:13px 14px; font-size:16px; background:white; color:#0f172a; outline:none; }
+input:focus, select:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(56,189,248,.14); }
+.primary-button, .primary, button.primary { border:0; border-radius:18px; padding:15px 18px; background:linear-gradient(135deg,#0ea5e9,#22c55e); color:white; font-weight:900; font-size:1rem; box-shadow:0 14px 30px rgba(14,165,233,.22); }
+.ghost-button, .secondary, .small-button, .ghost { border:1px solid var(--line); border-radius:16px; padding:12px 14px; background:rgba(255,255,255,.86); color:#0f172a; font-weight:800; }
+.danger-button, .danger { border:0; border-radius:16px; padding:12px 14px; background:#ef4444; color:white; font-weight:900; }
+.hidden { display:none !important; }
+.warning { border-radius:18px; padding:14px; margin:14px 0; background:#fff7ed; color:#9a3412; border:1px solid #fed7aa; }
+.hint, .sub { color:#64748b; font-size:.9rem; line-height:1.45; }
+.list { display:grid; gap:10px; }
+.row { display:grid; grid-template-columns:auto 1fr auto; gap:12px; align-items:center; padding:14px; border:1px solid var(--line); border-radius:22px; background:white; box-shadow:0 8px 28px rgba(15,23,42,.06); }
+.row.live { border-color:rgba(34,197,94,.55); background:linear-gradient(135deg,#f0fdf4,#ffffff); }
+.row.done { opacity:.82; }
+.badge { width:38px; height:38px; border-radius:14px; display:grid; place-items:center; background:#0f172a; color:white; font-weight:900; }
+.name { font-weight:900; }
+.meta, .small { color:#64748b; font-size:.82rem; line-height:1.35; }
+.time { font-weight:950; font-size:1.25rem; text-align:right; }
+.strong { font-weight:800; color:#0f172a; }
+.section-head, .section-title { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:12px; }
+.admin-badge { border:1px solid rgba(255,255,255,.25); border-radius:999px; padding:7px 10px; font-size:.72rem; font-weight:900; color:white; background:rgba(255,255,255,.12); }
+@media (max-width: 420px) { .quick-card, .form-grid, .grid { grid-template-columns:1fr; } .row { grid-template-columns:auto 1fr; } .row > div:last-child { grid-column: 1 / -1; display:flex; justify-content:space-between; align-items:end; } }
+
+
+/* v7 refinements: simpler, more premium registration flow */
+.registration-panel {
+  border: 1px solid rgba(255,255,255,.92);
+  background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(240,249,255,.94));
+  box-shadow: 0 22px 54px rgba(15, 23, 42, .16);
+}
+.registration-panel h2 {
+  font-size: 1.32rem;
+  letter-spacing: -0.04em;
+}
+#finishStage {
+  min-height: 58px;
+  font-weight: 850;
+  font-size: 1.03rem;
+}
+#finishTime {
+  min-height: 58px;
+  font-size: 1.25rem;
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+#nowButton {
+  min-height: 58px;
+  color: #075985;
+  background: linear-gradient(180deg, #e0f2fe, #bae6fd);
+  border-color: rgba(14,165,233,.28);
+  box-shadow: 0 10px 24px rgba(14,165,233,.12);
+}
+#finishButton {
+  min-height: 66px;
+  font-size: 1.08rem;
+  letter-spacing: -.01em;
+}
+.hint {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 16px;
+  color: #475569;
+  background: rgba(226, 232, 240, .55);
+}
+.quick-card {
+  background: linear-gradient(135deg, rgba(15,23,42,.94), rgba(8,47,73,.88));
+  border-color: rgba(255,255,255,.14);
+  color: white;
+}
+.quick-card .quick-label { color: rgba(255,255,255,.64); }
+.quick-card strong { color: white; font-size: 1.15rem; }
+.row {
+  border-radius: 24px;
+}
+.row.live {
+  box-shadow: 0 12px 32px rgba(34,197,94,.14);
+}
+@media (max-width: 420px) {
+  .registration-panel { margin-top: -28px; }
+  .hero-card { border-radius: 30px; }
+  .panel { border-radius: 26px; }
+}

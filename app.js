@@ -1,259 +1,328 @@
-const TABLE_RUNNERS = "stafett_runners";
-const TABLE_ACTUALS = "stafett_actuals";
-const ADMIN_CODE = "ronny";
+const DEFAULT_RUNNERS = [
+  { stage: 1, name: "Test", distance_km: 1.609, speed_kmh: 9.863, start_place: "Skansenparken", finish_place: "Rockheim Park" },
+  { stage: 2, name: "Jan Are", distance_km: 2.59, speed_kmh: 9.9, start_place: "Rockheim", finish_place: "Dakotaparken" },
+  { stage: 3, name: "Jan Are", distance_km: 1.0, speed_kmh: 10.0, start_place: "Dakotaparken", finish_place: "Dronning Mauds Minne Høgskole" },
+  { stage: 4, name: "Sørensen", distance_km: 2.82, speed_kmh: 10.0, start_place: "Dronning Mauds Minne Høgskole", finish_place: "Festningsparken" },
+  { stage: 5, name: "Ronny", distance_km: 1.75, speed_kmh: 10.141, start_place: "Festningsparken", finish_place: "Høgskoleparken" },
+  { stage: 6, name: "Ronny", distance_km: 1.609, speed_kmh: 9.5, start_place: "Høgskoleparken", finish_place: "Regnbueparken" },
+  { stage: 7, name: "Kenth Rune", distance_km: 2.8, speed_kmh: 10.0, start_place: "Regnbueparken", finish_place: "Sverresborg Museum" },
+  { stage: 8, name: "Anne Lene", distance_km: 3.55, speed_kmh: 8.5, start_place: "Sverresborg Museum", finish_place: "Museumsparken" },
+  { stage: 9, name: "Andreas", distance_km: 0.8, speed_kmh: 9.863, start_place: "Museumsparken", finish_place: "Marinen" },
+  { stage: 10, name: "Lien", distance_km: 2.58, speed_kmh: 9.9, start_place: "Marinen", finish_place: "Trondheim Stadion" }
+];
 
-let supabaseClient = null;
+const DEFAULT_START_TIME = "14:30";
+const STORE_KEY = "trondheimstafetten-state-v2";
 let runners = [];
-let actuals = [];
+let actuals = {};
+let supabaseClient = null;
+const cfg = window.STAFETT_CONFIG || {};
+const ADMIN_CODE = cfg.ADMIN_CODE || "ronny";
+const params = new URLSearchParams(window.location.search);
+const isAdmin = params.get("admin") === ADMIN_CODE || params.get("admin") === "1";
 
-const el = (id) => document.getElementById(id);
+const $ = (id) => document.getElementById(id);
 
-function isAdmin() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("admin") === ADMIN_CODE;
+function configured() {
+  return Boolean(cfg.SUPABASE_URL && cfg.SUPABASE_ANON_KEY && window.supabase);
 }
 
-function setStatus(text) {
-  const status = el("syncStatus");
-  if (status) status.textContent = text;
+function toMinutes(time) {
+  if (!time) return null;
+  const [h, m] = time.split(":").map(Number);
+  return h * 60 + m;
 }
 
-function localDateTimeValue(date = new Date()) {
-  const offset = date.getTimezoneOffset();
-  const local = new Date(date.getTime() - offset * 60000);
-  return local.toISOString().slice(0, 16);
+function toTime(minutes) {
+  if (minutes === null || Number.isNaN(minutes)) return "--:--";
+  const mins = Math.round(minutes) % (24 * 60);
+  const h = Math.floor(mins / 60).toString().padStart(2, "0");
+  const m = (mins % 60).toString().padStart(2, "0");
+  return `${h}:${m}`;
 }
 
-function oneMinuteAgoValue() {
-  return localDateTimeValue(new Date(Date.now() - 60 * 1000));
+function legMinutes(runner) {
+  const d = Number(runner.distance_km);
+  const s = Number(runner.speed_kmh);
+  if (!d || !s) return 0;
+  return (d / s) * 60;
 }
 
-function toDate(value) {
-  return value ? new Date(value) : null;
-}
-
-function fmtTime(value) {
-  const date = toDate(value);
-  if (!date || Number.isNaN(date.getTime())) return "Ikke registrert";
-  return date.toLocaleTimeString("no-NO", { hour: "2-digit", minute: "2-digit" });
-}
-
-function addMinutes(value, minutes) {
-  const date = toDate(value);
-  if (!date || !Number.isFinite(minutes)) return null;
-  return new Date(date.getTime() + minutes * 60000).toISOString();
-}
-
-function estimateMinutes(runner) {
-  const distance = Number(runner.distanse_km || 0);
-  const speed = Number(runner.hastighet_kmt || 0);
-  if (!distance || !speed) return null;
-  return Math.round((distance / speed) * 60);
-}
-
-function sortRunners(items) {
-  return [...items].sort((a, b) => Number(a.etappe || 0) - Number(b.etappe || 0));
-}
-
-function getActualForRunner(runnerId) {
-  return actuals.find((a) => String(a.runner_id) === String(runnerId));
-}
-
-function calculateSchedule() {
-  const sorted = sortRunners(runners);
-  let lastStart = null;
+function calculate() {
+  const sorted = [...runners].sort((a, b) => a.stage - b.stage);
+  let start = toMinutes(DEFAULT_START_TIME);
   return sorted.map((runner) => {
-    const actual = getActualForRunner(runner.id);
-    const minutes = estimateMinutes(runner);
-    const start = actual?.faktisk_vekslingstid || lastStart;
-    const estimatedNext = start && minutes ? addMinutes(start, minutes) : null;
-    if (estimatedNext) lastStart = estimatedNext;
-    return { runner, actual, start, estimatedNext, minutes };
+    const startTime = start;
+    const finishEstimate = startTime + legMinutes(runner);
+    const actualFinish = actuals[runner.stage] ? toMinutes(actuals[runner.stage]) : null;
+    const status = actualFinish ? "done" : (Date.now() && sorted.findIndex(x => x.stage === runner.stage) === firstOpenIndex(sorted) ? "live" : "waiting");
+    const row = { ...runner, startTime, finishEstimate, actualFinish, status };
+    start = actualFinish ?? finishEstimate;
+    return row;
   });
 }
 
-function initSupabase() {
-  if (!window.SUPABASE_URL || !window.SUPABASE_ANON_KEY) {
-    setStatus("Mangler Supabase");
-    return;
-  }
-  supabaseClient = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY);
+function firstOpenIndex(sorted) {
+  return sorted.findIndex(r => !actuals[r.stage]);
 }
 
-async function loadData() {
+function saveLocal() {
+  localStorage.setItem(STORE_KEY, JSON.stringify({ runners, actuals }));
+}
+
+function loadLocal() {
+  const raw = localStorage.getItem(STORE_KEY);
+  if (!raw) {
+    runners = DEFAULT_RUNNERS;
+    actuals = {};
+    saveLocal();
+    return;
+  }
+  try {
+    const state = JSON.parse(raw);
+    runners = state.runners?.length ? state.runners : DEFAULT_RUNNERS;
+    actuals = state.actuals || {};
+  } catch {
+    runners = DEFAULT_RUNNERS;
+    actuals = {};
+  }
+}
+
+async function initSupabase() {
+  if (!configured()) {
+    $("setupWarning").classList.remove("hidden");
+    return false;
+  }
+  supabaseClient = window.supabase.createClient(cfg.SUPABASE_URL, cfg.SUPABASE_ANON_KEY);
+  return true;
+}
+
+async function loadRemote() {
   if (!supabaseClient) return;
-  setStatus("Synker...");
-  const [runnerRes, actualRes] = await Promise.all([
-    supabaseClient.from(TABLE_RUNNERS).select("*").order("etappe", { ascending: true }),
-    supabaseClient.from(TABLE_ACTUALS).select("*")
-  ]);
-
-  if (runnerRes.error || actualRes.error) {
-    console.error(runnerRes.error || actualRes.error);
-    setStatus("Feil ved synk");
-    return;
+  const { data, error } = await supabaseClient
+    .from("stafett_runners")
+    .select("*")
+    .eq("event_id", cfg.EVENT_ID)
+    .order("stage");
+  if (error) throw error;
+  if (!data || data.length === 0) {
+    await supabaseClient.from("stafett_runners").insert(DEFAULT_RUNNERS.map(r => ({ ...r, event_id: cfg.EVENT_ID })));
+    runners = DEFAULT_RUNNERS;
+  } else {
+    runners = data;
   }
-
-  runners = runnerRes.data || [];
-  actuals = actualRes.data || [];
-  renderAll();
-  setStatus("Synket " + new Date().toLocaleTimeString("no-NO", { hour: "2-digit", minute: "2-digit" }));
+  const res = await supabaseClient
+    .from("stafett_actuals")
+    .select("stage, finish_time")
+    .eq("event_id", cfg.EVENT_ID);
+  if (res.error) throw res.error;
+  actuals = Object.fromEntries((res.data || []).map(x => [x.stage, x.finish_time.slice(0, 5)]));
 }
 
-function renderRunnerSelect() {
-  const select = el("runnerSelect");
-  select.innerHTML = "";
-  sortRunners(runners).forEach((runner) => {
-    const option = document.createElement("option");
-    option.value = runner.id;
-    option.textContent = `${runner.etappe} - ${runner.navn || "Uten navn"}`;
-    select.appendChild(option);
-  });
+async function saveRunnerRemote(runner) {
+  if (!supabaseClient) return;
+  await supabaseClient.from("stafett_runners").upsert({ ...runner, event_id: cfg.EVENT_ID }, { onConflict: "event_id,stage" });
 }
 
-function renderNextRunner() {
-  const schedule = calculateSchedule();
-  const next = schedule.find((item) => !item.actual?.faktisk_vekslingstid);
-  el("nextRunner").textContent = next
-    ? `Etappe ${next.runner.etappe}: ${next.runner.navn || "Uten navn"}`
-    : "Alle registrerte vekslinger er lagt inn";
+async function saveActualRemote(stage, finishTime) {
+  if (!supabaseClient) return;
+  await supabaseClient.from("stafett_actuals").upsert({ event_id: cfg.EVENT_ID, stage, finish_time: finishTime }, { onConflict: "event_id,stage" });
 }
 
-function renderRunnerList() {
-  const list = el("runnerList");
-  list.innerHTML = "";
-
-  sortRunners(runners).forEach((runner) => {
-    const card = document.createElement("div");
-    card.className = "runner-card";
-    card.innerHTML = `
-      <div class="grid">
-        <input data-field="etappe" type="number" value="${runner.etappe ?? ""}" placeholder="Etappe" />
-        <input data-field="navn" type="text" value="${runner.navn ?? ""}" placeholder="Navn" />
-      </div>
-      <div class="grid">
-        <input data-field="distanse_km" type="number" step="0.01" value="${runner.distanse_km ?? ""}" placeholder="Km" />
-        <input data-field="hastighet_kmt" type="number" step="0.1" value="${runner.hastighet_kmt ?? ""}" placeholder="Km/t" />
-      </div>
-      <div class="runner-actions">
-        <button class="save-runner" type="button">Lagre</button>
-        <button class="remove-runner" type="button">Slett</button>
-      </div>
-    `;
-
-    card.querySelector(".save-runner").addEventListener("click", async () => {
-      const payload = {};
-      card.querySelectorAll("input").forEach((input) => {
-        const field = input.dataset.field;
-        payload[field] = ["etappe", "distanse_km", "hastighet_kmt"].includes(field) ? Number(input.value) : input.value;
-      });
-      await supabaseClient.from(TABLE_RUNNERS).update(payload).eq("id", runner.id);
-      await loadData();
-    });
-
-    card.querySelector(".remove-runner").addEventListener("click", async () => {
-      if (!confirm(`Slette etappe ${runner.etappe} - ${runner.navn}?`)) return;
-      await supabaseClient.from(TABLE_ACTUALS).delete().eq("runner_id", runner.id);
-      await supabaseClient.from(TABLE_RUNNERS).delete().eq("id", runner.id);
-      await loadData();
-    });
-
-    list.appendChild(card);
-  });
+async function resetRemote() {
+  if (!supabaseClient) return;
+  await supabaseClient.from("stafett_actuals").delete().eq("event_id", cfg.EVENT_ID);
 }
 
-function renderTimeline() {
-  const timeline = el("timeline");
-  timeline.innerHTML = "";
+async function replaceRunnersRemote(newRunners) {
+  if (!supabaseClient) return;
+  await supabaseClient.from("stafett_actuals").delete().eq("event_id", cfg.EVENT_ID);
+  await supabaseClient.from("stafett_runners").delete().eq("event_id", cfg.EVENT_ID);
+  await supabaseClient.from("stafett_runners").insert(newRunners.map(r => ({ ...r, event_id: cfg.EVENT_ID })));
+}
 
-  calculateSchedule().forEach(({ runner, actual, start, estimatedNext, minutes }) => {
-    const card = document.createElement("div");
-    card.className = "time-card";
-    card.innerHTML = `
+function runnerLabel(runner) {
+  const name = runner?.name?.trim() || "Uten navn";
+  return `${runner.stage} - ${name}`;
+}
+
+function fillSelects() {
+  const sorted = [...runners].sort((a, b) => a.stage - b.stage);
+  const options = sorted.map(r => `<option value="${r.stage}">${escapeHtml(runnerLabel(r))}</option>`).join("");
+  for (const id of ["stage", "finishStage"]) {
+    const current = $(id).value;
+    $(id).innerHTML = options;
+    if (current) $(id).value = current;
+  }
+}
+
+function fillForm(stage) {
+  const r = runners.find(x => x.stage === Number(stage));
+  if (!r) return;
+  $("stage").value = r.stage;
+  $("name").value = r.name || "";
+  $("distance").value = r.distance_km || "";
+  $("speed").value = r.speed_kmh || "";
+  $("startPlace").value = r.start_place || "";
+  $("finishPlace").value = r.finish_place || "";
+}
+
+function render() {
+  fillSelects();
+  if (!$('name').value) fillForm($("stage").value || 1);
+  const rows = calculate();
+  const next = rows.find(r => r.status !== "done");
+  if ($("nextRunner")) $("nextRunner").textContent = next ? runnerLabel(next) : "Alle registrert";
+  if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.finishEstimate) : "Ferdig";
+  $("list").innerHTML = rows.map(r => {
+    const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
+    return `<article class="row ${r.status}">
+      <div class="badge">${r.stage}</div>
       <div>
-        <strong>${runner.etappe} - ${runner.navn || "Uten navn"}</strong>
-        <div class="time-meta">Veksling: ${fmtTime(actual?.faktisk_vekslingstid)} · Neste estimat: ${fmtTime(estimatedNext)}</div>
-        <div class="time-meta">${runner.distanse_km ?? "?"} km · ${runner.hastighet_kmt ?? "?"} km/t · ${minutes ?? "?"} min</div>
+        <div class="name">${escapeHtml(runnerLabel(r))}</div>
+        <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
+        <div class="meta">${Number(r.distance_km).toFixed(3)} km · ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
+        <div class="meta">${statusText}${r.actualFinish ? ` · faktisk inn ${toTime(r.actualFinish)}` : ""}</div>
       </div>
-      <span class="time-badge">${actual?.faktisk_vekslingstid ? "Registrert" : "Venter"}</span>
-    `;
-    timeline.appendChild(card);
-  });
+      <div>
+        <div class="time">${toTime(r.startTime)}</div>
+        <div class="small">start</div>
+        <div class="small strong">inn ${toTime(r.finishEstimate)}</div>
+      </div>
+    </article>`;
+  }).join("");
 }
 
-function renderAll() {
-  renderRunnerSelect();
-  renderNextRunner();
-  renderRunnerList();
-  renderTimeline();
+
+function parseNumber(value) {
+  if (value === undefined || value === null) return 0;
+  return Number(String(value).trim().replace(",", "."));
 }
 
-async function registerChangeover() {
-  const runnerId = el("runnerSelect").value;
-  const time = el("actualTime").value;
-  if (!runnerId || !time) return alert("Velg løper og tidspunkt først.");
+function normalizeHeader(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[æ]/g, "ae")
+    .replace(/[ø]/g, "o")
+    .replace(/[å]/g, "a")
+    .replace(/[^a-z0-9]/g, "");
+}
 
-  const payload = {
-    runner_id: Number(runnerId),
-    faktisk_vekslingstid: new Date(time).toISOString()
+function parseRunnerPaste(text) {
+  const lines = text.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (!lines.length) return [];
+
+  const splitLine = (line) => {
+    if (line.includes("\t")) return line.split("\t");
+    if (line.includes(";")) return line.split(";");
+    return line.split(",");
   };
 
-  const existing = getActualForRunner(runnerId);
-  const result = existing
-    ? await supabaseClient.from(TABLE_ACTUALS).update(payload).eq("id", existing.id)
-    : await supabaseClient.from(TABLE_ACTUALS).insert(payload);
+  const first = splitLine(lines[0]).map(x => x.trim());
+  const normalized = first.map(normalizeHeader);
+  const hasHeader = normalized.some(h => ["etappe", "etp", "navn", "loper", "distanse", "hastighet", "kmh", "kmt"].includes(h));
 
-  if (result.error) {
-    console.error(result.error);
-    alert("Kunne ikke lagre veksling. Sjekk Supabase-policy.");
-    return;
-  }
+  const idx = (names, fallback) => {
+    const found = normalized.findIndex(h => names.includes(h));
+    return found >= 0 ? found : fallback;
+  };
 
-  await loadData();
+  const indexes = {
+    stage: hasHeader ? idx(["etappe", "etp", "stage"], 0) : 0,
+    name: hasHeader ? idx(["navn", "loper", "deltaker", "name"], 1) : 1,
+    distance: hasHeader ? idx(["distanse", "distansekm", "km", "lengde"], 2) : 2,
+    speed: hasHeader ? idx(["hastighet", "hastighetkmt", "kmt", "kmh", "speed", "speedkmh"], 3) : 3,
+    start: hasHeader ? idx(["start", "startsted", "fra"], 4) : 4,
+    finish: hasHeader ? idx(["mal", "maal", "veksling", "til", "finish", "malsted"], 5) : 5,
+  };
+
+  return lines.slice(hasHeader ? 1 : 0).map(line => {
+    const cells = splitLine(line).map(x => x.trim());
+    return {
+      stage: parseInt(cells[indexes.stage], 10),
+      name: cells[indexes.name] || "Uten navn",
+      distance_km: parseNumber(cells[indexes.distance]),
+      speed_kmh: parseNumber(cells[indexes.speed]),
+      start_place: cells[indexes.start] || "",
+      finish_place: cells[indexes.finish] || ""
+    };
+  }).filter(r => r.stage && r.name && r.distance_km && r.speed_kmh)
+    .sort((a, b) => a.stage - b.stage);
 }
 
-async function addRunner() {
-  const nextEtappe = runners.length ? Math.max(...runners.map((r) => Number(r.etappe || 0))) + 1 : 1;
-  await supabaseClient.from(TABLE_RUNNERS).insert({
-    etappe: nextEtappe,
-    navn: "Ny løper",
-    distanse_km: 1.5,
-    hastighet_kmt: 12
-  });
-  await loadData();
+function escapeHtml(value) {
+  return String(value).replace(/[&<>'"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" }[c]));
 }
 
-async function resetRace() {
-  if (!confirm("Start nytt løp? Dette sletter registrerte tider, men beholder løpere/oppsett.")) return;
-  const { error } = await supabaseClient.from(TABLE_ACTUALS).delete().neq("id", 0);
-  if (error) {
-    alert("Kunne ikke nullstille tider. Kjør supabase.sql hvis delete-policy mangler.");
-    console.error(error);
-    return;
-  }
-  await loadData();
-}
-
-function bindEvents() {
-  el("actualTime").value = oneMinuteAgoValue();
-  el("oneMinuteAgoBtn").addEventListener("click", () => {
-    el("actualTime").value = oneMinuteAgoValue();
-  });
-  el("registerBtn").addEventListener("click", registerChangeover);
-  el("syncBtn").addEventListener("click", loadData);
-  el("addRunnerBtn").addEventListener("click", addRunner);
-
-  if (isAdmin()) {
-    el("adminTools").classList.remove("hidden");
-    el("resetRaceBtn").addEventListener("click", resetRace);
+async function sync() {
+  if (!supabaseClient) return render();
+  try {
+    await loadRemote();
+    saveLocal();
+    render();
+  } catch (e) {
+    alert("Kunne ikke synkronisere: " + e.message);
   }
 }
 
 async function boot() {
-  initSupabase();
-  bindEvents();
-  await loadData();
-  setInterval(loadData, 15000);
+  if (isAdmin && $("resetButton")) $("resetButton").classList.remove("hidden");
+  if (isAdmin && $("adminBadge")) $("adminBadge").classList.remove("hidden");
+  loadLocal();
+  const hasRemote = await initSupabase();
+  if (hasRemote) await sync();
+  render();
+
+  $("stage").addEventListener("change", e => fillForm(e.target.value));
+  $("runnerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const runner = {
+      stage: Number($("stage").value),
+      name: $("name").value.trim(),
+      distance_km: Number($("distance").value),
+      speed_kmh: Number($("speed").value),
+      start_place: $("startPlace").value.trim(),
+      finish_place: $("finishPlace").value.trim()
+    };
+    runners = runners.filter(r => r.stage !== runner.stage).concat(runner).sort((a, b) => a.stage - b.stage);
+    saveLocal();
+    await saveRunnerRemote(runner);
+    render();
+  });
+
+  $("nowButton").addEventListener("click", () => {
+    const d = new Date(Date.now() - 60 * 1000);
+    $("finishTime").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  });
+
+  $("finishButton").addEventListener("click", async () => {
+    const stage = Number($("finishStage").value);
+    const time = $("finishTime").value;
+    if (!time) return alert("Velg klokkeslett først");
+    actuals[stage] = time;
+    saveLocal();
+    await saveActualRemote(stage, time);
+    render();
+  });
+
+  $("syncButton").addEventListener("click", sync);
+  if ($("resetButton")) $("resetButton").addEventListener("click", async () => {
+    if (!isAdmin) return alert("Admin-lenke kreves");
+    if (!confirm("Start nytt løp? Dette sletter registrerte vekslingstider, men beholder løperlisten.")) return;
+    actuals = {};
+    saveLocal();
+    await resetRemote();
+    render();
+  });
+
+  if (!$("finishTime").value) {
+    const d = new Date(Date.now() - 60 * 1000);
+    $("finishTime").value = `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`;
+  }
+
+  if (supabaseClient) {
+    setInterval(sync, 15000);
+  }
 }
 
 boot();
