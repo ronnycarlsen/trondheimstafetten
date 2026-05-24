@@ -961,72 +961,57 @@ button[type="submit"],
 }
 
 
-/* v28: corrected from v26 base. Only small requested changes. */
+/* v29: v26 base, only small requested adjustments */
 html,
 body {
   background:
-    radial-gradient(circle at 86% 0%, rgba(0, 232, 199, .17), transparent 30%),
-    radial-gradient(circle at 8% 10%, rgba(136, 158, 172, .28), transparent 28%),
-    linear-gradient(145deg, #58636d 0%, #3f4a54 48%, #303943 100%) !important;
+    radial-gradient(circle at 86% 0%, rgba(0, 232, 199, .14), transparent 32%),
+    radial-gradient(circle at 8% 12%, rgba(160, 180, 192, .30), transparent 30%),
+    linear-gradient(145deg, #66717b 0%, #4b5660 48%, #3c4650 100%) !important;
+}
+
+.registration-panel label {
+  color: rgba(239, 247, 250, .88) !important;
 }
 
 .registration-panel input,
 .registration-panel select,
 .registration-panel .time-shortcut {
   background:
-    linear-gradient(145deg, rgba(18, 36, 48, .96), rgba(10, 24, 35, .96)) !important;
-  border: 1px solid rgba(0, 232, 199, .32) !important;
+    linear-gradient(145deg, rgba(21, 39, 51, .97), rgba(12, 27, 38, .96)) !important;
+  border: 1px solid rgba(0, 232, 199, .34) !important;
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.06),
-    0 14px 30px rgba(0,0,0,.16) !important;
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 16px 32px rgba(0,0,0,.16) !important;
 }
 
 .registration-panel input:focus,
 .registration-panel select:focus {
-  border-color: rgba(0, 232, 199, .62) !important;
+  border-color: rgba(0, 232, 199, .65) !important;
   box-shadow:
-    0 0 0 3px rgba(0, 232, 199, .12),
+    0 0 0 3px rgba(0, 232, 199, .13),
     inset 0 1px 0 rgba(255,255,255,.08) !important;
 }
 
 .registration-panel .time-shortcut {
-  color: #bafff1 !important;
+  color: #c7fff4 !important;
   font-weight: 850 !important;
   letter-spacing: .01em !important;
 }
 
-.link-footer {
-  display: grid;
-  gap: 10px;
-  margin: 18px 0 28px;
+.registration-panel .field-help {
+  color: rgba(230, 242, 246, .64) !important;
 }
 
-.link-footer a {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 54px;
-  padding: 14px 16px;
-  border-radius: 18px;
-  text-decoration: none;
-  color: rgba(244, 250, 252, .96);
-  font-weight: 850;
+.weather-footer a {
   background:
-    linear-gradient(145deg, rgba(10, 24, 34, .88), rgba(7, 16, 24, .84));
-  border: 1px solid rgba(137, 170, 181, .22);
-  box-shadow:
-    0 16px 40px rgba(3, 9, 14, .22),
-    inset 0 1px 0 rgba(255,255,255,.055);
+    linear-gradient(145deg, rgba(10, 24, 34, .88), rgba(7, 16, 24, .84)) !important;
+  border: 1px solid rgba(137, 170, 181, .24) !important;
+  color: rgba(244, 250, 252, .96) !important;
 }
 
-.link-footer a:active,
-.link-footer a:hover {
-  border-color: rgba(0, 232, 199, .42);
-  color: #bafff1;
-}
-
-@media (min-width: 680px) {
-  .link-footer {
-    grid-template-columns: repeat(3, 1fr);
-  }
+.weather-footer a:hover,
+.weather-footer a:active {
+  border-color: rgba(0, 232, 199, .42) !important;
+  color: #bafff1 !important;
 }
