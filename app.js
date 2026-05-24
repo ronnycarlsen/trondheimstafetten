@@ -217,6 +217,9 @@ function fillForm(stage) {
   $("speed").value = r.speed_kmh || "";
   $("startPlace").value = r.start_place || "";
   $("finishPlace").value = r.finish_place || "";
+  if ($("registeredFinish")) {
+    $("registeredFinish").value = actuals[r.stage] || "";
+  }
 }
 
 function render() {
@@ -228,17 +231,20 @@ function render() {
   if ($("nextEstimate")) $("nextEstimate").textContent = next ? toTime(next.startTime) : "Ferdig";
   $("list").innerHTML = rows.map(r => {
     const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
+    const shownFinish = r.actualFinish ?? r.finishEstimate;
+    const finishText = r.actualFinish ? "Faktisk inn" : "Estimert inn";
+    const actualBadge = r.actualFinish ? `<span class="actual-pill">Registrert ${toTime(r.actualFinish)}</span>` : "";
     return `<article class="row ${r.status}">
       <div class="badge">${r.stage}</div>
       <div>
         <div class="name">${escapeHtml(runnerLabel(r))}</div>
         <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
         <div class="meta">${Number(r.distance_km).toFixed(3)} km · ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
-        <div class="meta">${statusText}${r.actualFinish ? ` · faktisk inn ${toTime(r.actualFinish)}` : ""}</div>
+        <div class="meta row-status">${statusText} ${actualBadge}</div>
       </div>
       <div class="time-stack">
         <div class="time-line start-line"><span>Start</span><strong>${toTime(r.startTime)}</strong></div>
-        <div class="time-line finish-line"><span>Inn</span><strong>${toTime(r.finishEstimate)}</strong></div>
+        <div class="time-line finish-line ${r.actualFinish ? "actual-finish" : ""}"><span>${finishText}</span><strong>${toTime(shownFinish)}</strong></div>
       </div>
     </article>`;
   }).join("");
@@ -367,6 +373,7 @@ async function boot() {
     saveLocal();
     await saveActualRemote(stage, time);
     await sync({ silent: true });
+    fillForm($("stage").value || stage);
   });
 
   $("syncButton").addEventListener("click", sync);

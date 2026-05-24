@@ -995,3 +995,44 @@ body {
     font-size: 1.06rem;
   }
 }
+
+
+.actual-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(16,185,129,.12);
+  color: #047857;
+  font-size: .72rem;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.actual-finish strong {
+  color: #047857;
+  opacity: 1;
+}
+
+.actual-finish span {
+  color: #047857;
+}
+
+input[readonly] {
+  background: #f8fafc;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+@media (max-width: 420px) {
+  .actual-pill {
+    margin-left: 0;
+    margin-top: 4px;
+    width: fit-content;
+  }
+  .row-status {
+    display: grid;
+    gap: 4px;
+  }
+}
