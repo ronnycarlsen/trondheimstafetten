@@ -2,7 +2,7 @@
 <html lang="no">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cutrin Pace Control</title>
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -10,46 +10,37 @@
 <body>
   <main class="app-shell">
     <header class="hero-card">
-      <div class="hero-mark" aria-hidden="true"></div>
+      <div class="hero-gridline"></div>
       <div class="hero-copy">
-        <p class="hero-kicker">Sanntid • Hastighet • Presisjon</p>
+        <div class="hero-topline">
+          <span class="live-pill"><span></span> LIVE</span>
+          <div class="brand-lockup" aria-label="Cutrin Norge og RC Zero">
+            <span class="cutrin-mark">CUTRIN NORGE</span>
+            <span class="brand-divider"></span>
+            <span class="rc-zero-logo">RC <em>ZERO</em></span>
+          </div>
+          <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
+        </div>
+        <p class="hero-kicker">SANNTID • HASTIGHET • PRESISJON</p>
         <h1>Cutrin Pace Control</h1>
+        <p class="sub">Mobil styring av vekslinger, fart og starttider for Trondheimstafetten.</p>
       </div>
-      <div class="brand-stack" aria-label="Cutrin Norge og RC Zero">
-        <span class="cutrin-mark">Cutrin Norge</span>
-        <span class="brand-divider"></span>
-        <span class="rc-logo">RC <small>ZERO</small></span>
-      </div>
-      <div class="hero-actions">
-        <span class="live-pill"><span></span>LIVE</span>
-        <button id="syncButton" class="small-button" type="button">Synk</button>
-        <button id="resetButton" class="danger-button hidden" type="button">Start nytt løp</button>
-        <span id="adminBadge" class="admin-badge hidden">ADMIN</span>
-      </div>
+      <div class="hero-actions"><button id="resetButton" class="danger-button hidden" type="button">Start nytt løp</button><button id="syncButton" class="small-button" type="button">Synk</button></div>
     </header>
 
     <section id="setupWarning" class="warning hidden">
       Kjører lokalt på denne enheten. Legg inn Supabase URL og nøkkel i <code>config.js</code> for live deling via én lenke.
     </section>
 
-    <section class="quick-grid">
-      <article class="quick-card panel runner-now-card">
-        <div class="corner-accent"></div>
-        <span class="quick-label">Nå løper:</span>
+    <section class="quick-card panel">
+      <div>
+        <span class="quick-label">Nå løper</span>
         <strong id="nextRunner">--</strong>
-      </article>
-      <article class="quick-card panel estimate-card">
-        <div class="corner-accent"></div>
-        <span class="quick-label">Neste estimerte veksling:</span>
-        <strong id="nextEstimate">--:--</strong>
-      </article>
-    </section>
-
-    <section class="panel start-panel">
-      <div class="section-head">
-        <h2>Starttider</h2>
       </div>
-      <div id="list" class="list"></div>
+      <div>
+        <span class="quick-label">Neste estimerte veksling</span>
+        <strong id="nextEstimate">--:--</strong>
+      </div>
     </section>
 
     <section class="panel registration-panel">
@@ -67,7 +58,14 @@
       <p class="hint">Velg «1 min siden», så registrerer du veksling.</p>
     </section>
 
-    <section class="panel edit-panel">
+    <section class="panel sticky-card">
+      <div class="section-head">
+        <h2>Starttider</h2>
+      </div>
+      <div id="list" class="list"></div>
+    </section>
+
+    <section class="panel">
       <h2>Endre løper / hastighet</h2>
       <form id="runnerForm" class="grid form-grid">
         <label class="wide">Velg etappe / løper
@@ -95,15 +93,10 @@
       </form>
     </section>
 
-    <section class="info-strip panel">
-      <div><strong>Sanntidsdata</strong><span>Oppdateres automatisk hvert 20. sekund</span></div>
-      <div><strong>Presisjon i hvert steg</strong><span>Nøyaktige beregninger basert på faktiske registreringer</span></div>
-      <div><strong>Kontroll på farten</strong><span>Optimaliser laget ditt hele veien til mål</span></div>
-    </section>
-
-    <footer class="site-footer">
-      <a class="weather-link" href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank" rel="noopener noreferrer">Se værmelding</a>
+      <footer class="weather-footer">
+      <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank" rel="noopener">Se værmelding</a>
     </footer>
+
   </main>
   <script src="config.js"></script>
   <script src="app.js"></script>
