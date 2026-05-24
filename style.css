@@ -1084,3 +1084,31 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   }
 }
+
+
+/* v32 footer layout */
+.weather-footer {
+  display: flex !important;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.top-links {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.runner-link {
+  max-width: 320px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center !important;
+  text-align: center;
+}
+
+@media (max-width: 520px) {
+  .top-links {
+    grid-template-columns: 1fr 1fr;
+  }
+}
