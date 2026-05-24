@@ -1015,3 +1015,72 @@ body {
   border-color: rgba(0, 232, 199, .42) !important;
   color: #bafff1 !important;
 }
+
+
+/* v30: clearer registration fields and clock tap target */
+.registration-panel input,
+.registration-panel select,
+.registration-panel .time-shortcut {
+  background:
+    linear-gradient(145deg, rgba(28, 51, 64, .98), rgba(17, 35, 48, .97)) !important;
+  border: 1px solid rgba(0, 232, 199, .42) !important;
+  color: #f7fcff !important;
+}
+
+.registration-panel input[type="time"] {
+  min-height: 76px !important;
+  padding-right: 54px !important;
+  font-size: 1.28rem !important;
+  font-weight: 850 !important;
+  letter-spacing: .01em !important;
+  cursor: pointer;
+  appearance: auto !important;
+  -webkit-appearance: auto !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 1 !important;
+  filter: invert(91%) sepia(98%) saturate(908%) hue-rotate(93deg) brightness(103%) contrast(102%);
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  padding: 12px;
+  margin-right: -8px;
+}
+
+.registration-panel input[type="time"]::-webkit-datetime-edit {
+  padding: 0;
+}
+
+.registration-panel .time-shortcut {
+  min-height: 76px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  background:
+    linear-gradient(145deg, rgba(31, 58, 70, .98), rgba(17, 38, 51, .97)) !important;
+  color: #d0fff5 !important;
+}
+
+.registration-panel select {
+  min-height: 64px !important;
+}
+
+.weather-footer {
+  display: grid !important;
+  gap: 10px !important;
+}
+
+.weather-footer a {
+  min-height: 52px;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 680px) {
+  .weather-footer {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+}
