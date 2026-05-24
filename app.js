@@ -71,6 +71,41 @@ function legMinutes(runner) {
   return (d / s) * 60;
 }
 
+function minutesBetween(startTime, endTime) {
+  const start = toMinutes(startTime);
+  const end = toMinutes(endTime);
+  if (start === null || end === null) return null;
+  let diff = end - start;
+  if (diff < 0) diff += 24 * 60;
+  return diff;
+}
+
+function measuredSegmentFor(stage, actualFinishTime, sorted) {
+  if (!actualFinishTime) return null;
+  const previousActualStage = Object.keys(actuals)
+    .map(Number)
+    .filter(s => Number.isFinite(s) && s < stage && actuals[s])
+    .sort((a, b) => b - a)[0];
+
+  const fromStage = previousActualStage ? previousActualStage + 1 : 1;
+  const fromTime = previousActualStage ? actuals[previousActualStage] : DEFAULT_START_TIME;
+  const elapsed = minutesBetween(fromTime, actualFinishTime);
+  if (!elapsed || elapsed <= 0) return null;
+
+  const distance = sorted
+    .filter(r => r.stage >= fromStage && r.stage <= stage)
+    .reduce((sum, r) => sum + Number(r.distance_km || 0), 0);
+  if (!distance) return null;
+
+  return {
+    fromStage,
+    previousActualStage: previousActualStage || null,
+    elapsed,
+    distance,
+    speed: (distance / elapsed) * 60
+  };
+}
+
 function latestRegisteredStage() {
   // Bruk siste registrering i tid, ikke første manglende etappe.
   // Dette gjør at appen tåler at noen glemmer en tidligere veksling.
@@ -103,7 +138,8 @@ function calculate() {
     const finishEstimate = startTime + legMinutes(runner);
     const actualFinish = actuals[runner.stage] ? toMinutes(actuals[runner.stage]) : null;
     const status = actualFinish ? "done" : (runner.stage === liveStage ? "live" : "waiting");
-    const row = { ...runner, startTime, finishEstimate, actualFinish, status };
+    const measured = actualFinish ? measuredSegmentFor(runner.stage, actuals[runner.stage], sorted) : null;
+    const row = { ...runner, startTime, finishEstimate, actualFinish, status, measured };
     start = actualFinish ?? finishEstimate;
     return row;
   });
@@ -233,14 +269,17 @@ function render() {
     const statusText = r.status === "done" ? "Registrert" : r.status === "live" ? "Løper nå" : "Ikke startet";
     const shownFinish = r.actualFinish ?? r.finishEstimate;
     const finishText = r.actualFinish ? "Faktisk inn" : "Estimert inn";
-    const actualBadge = r.actualFinish ? `<span class="actual-pill">Registrert ${toTime(r.actualFinish)}</span>` : "";
+    const measuredText = r.measured
+      ? `Tid brukt ${Math.round(r.measured.elapsed)} min · faktisk ${r.measured.speed.toFixed(1)} km/t${r.measured.previousActualStage ? ` · fra etappe ${r.measured.previousActualStage}` : ""}`
+      : "";
     return `<article class="row ${r.status}">
       <div class="badge">${r.stage}</div>
       <div>
         <div class="name">${escapeHtml(runnerLabel(r))}</div>
         <div class="meta">${escapeHtml(r.start_place || "")} → ${escapeHtml(r.finish_place || "")}</div>
-        <div class="meta">${Number(r.distance_km).toFixed(3)} km · ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
-        <div class="meta row-status">${statusText} ${actualBadge}</div>
+        <div class="meta">${Number(r.distance_km).toFixed(3)} km · estimert ${Number(r.speed_kmh).toFixed(1)} km/t · ${Math.round(legMinutes(r))} min</div>
+        <div class="meta row-status">${statusText}</div>
+        ${measuredText ? `<div class="actual-metrics">${escapeHtml(measuredText)}</div>` : ""}
       </div>
       <div class="time-stack">
         <div class="time-line start-line"><span>Start</span><strong>${toTime(r.startTime)}</strong></div>

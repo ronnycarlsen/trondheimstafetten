@@ -1036,3 +1036,32 @@ input[readonly] {
     gap: 4px;
   }
 }
+
+/* v17: faktiske målinger per registrerte veksling */
+.actual-metrics {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: 5px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(14,165,233,.14), rgba(16,185,129,.14));
+  color: #0f766e;
+  font-size: .72rem;
+  font-weight: 900;
+  letter-spacing: -.01em;
+  border: 1px solid rgba(16,185,129,.18);
+}
+
+.row.done .row-status {
+  color: #64748b;
+  font-weight: 800;
+}
+
+@media (max-width: 420px) {
+  .actual-metrics {
+    font-size: .70rem;
+    line-height: 1.25;
+    white-space: normal;
+  }
+}
