@@ -499,3 +499,21 @@ boot();
   const observer = new MutationObserver(styleStatuses);
   observer.observe(document.documentElement, { childList: true, subtree: true, characterData: true });
 })();
+
+
+// v35 visual-only: status color classes and optional mobile badge status placement
+(function () {
+  function decorateRows() {
+    document.querySelectorAll(".row-status").forEach((el) => {
+      const txt = (el.textContent || "").trim().toLowerCase();
+      el.classList.toggle("status-running", txt.includes("løper nå"));
+      el.classList.toggle("status-not-started", txt.includes("ikke startet"));
+    });
+  }
+  document.addEventListener("DOMContentLoaded", decorateRows);
+  new MutationObserver(decorateRows).observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    characterData: true
+  });
+})();

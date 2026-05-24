@@ -1433,3 +1433,163 @@ body {
     min-width: 70px !important;
   }
 }
+
+
+/* v35: mobile polish for register help, time picker and runner status */
+
+/* Help text under registration: centered and cleaner */
+.registration-panel .hint,
+.registration-panel p.hint,
+.registration-panel .help-text,
+.registration-panel .field-hint {
+  text-align: center !important;
+  max-width: 31rem !important;
+  margin: 14px auto 0 !important;
+  color: rgba(227, 238, 242, .78) !important;
+  font-size: .86rem !important;
+  line-height: 1.45 !important;
+}
+
+.registration-panel .hint strong,
+.registration-panel p.hint strong {
+  color: #dffff8 !important;
+  font-weight: 850 !important;
+}
+
+/* Time field: remove awkward fake icon placement and make picker feel like a full button */
+.registration-panel label:has(input[type="time"])::after {
+  display: none !important;
+}
+
+.registration-panel input[type="time"] {
+  min-height: 78px !important;
+  padding: 0 18px !important;
+  text-align: center !important;
+  font-size: 1.46rem !important;
+  font-weight: 900 !important;
+  border-radius: 24px !important;
+  background:
+    linear-gradient(145deg, rgba(31, 58, 70, .98), rgba(17, 38, 51, .97)) !important;
+  border: 1px solid rgba(0, 232, 199, .48) !important;
+}
+
+.registration-panel input[type="time"]::-webkit-calendar-picker-indicator {
+  opacity: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  position: absolute !important;
+  inset: 0 !important;
+  cursor: pointer !important;
+}
+
+/* Make the quick button pair visually balanced with time field */
+.registration-panel .time-shortcut,
+.time-shortcut {
+  min-height: 78px !important;
+  border-radius: 24px !important;
+  padding: 12px 14px !important;
+}
+
+/* Status colors corrected */
+.row-status.status-running,
+.row .row-status.status-running,
+.status-running {
+  color: #ffb347 !important;
+}
+
+.row-status.status-not-started,
+.row .row-status.status-not-started,
+.status-not-started {
+  color: #ff8585 !important;
+}
+
+/* Do not force active row status red/orange incorrectly */
+.row.active .row-status:not(.status-not-started),
+.row.is-active .row-status:not(.status-not-started),
+.row.current .row-status:not(.status-not-started) {
+  color: #ffb347 !important;
+}
+
+/* Mobile runner cards: status under badge, more text room */
+@media (max-width: 520px) {
+  .row {
+    grid-template-columns: 42px minmax(0, 1fr) minmax(78px, auto) !important;
+    grid-template-areas:
+      "badge main times"
+      "status main times" !important;
+    gap: 4px 9px !important;
+    align-items: start !important;
+    padding: 11px 10px !important;
+  }
+
+  .badge {
+    grid-area: badge !important;
+    align-self: start !important;
+    justify-self: center !important;
+    margin: 0 !important;
+    width: 34px !important;
+    height: 34px !important;
+    font-size: .98rem !important;
+  }
+
+  .row > div:nth-child(2),
+  .row-main,
+  .runner-info,
+  .info {
+    grid-area: main !important;
+  }
+
+  .time-stack,
+  .times {
+    grid-area: times !important;
+    align-self: center !important;
+  }
+
+  .row-status {
+    grid-area: status !important;
+    justify-self: center !important;
+    align-self: start !important;
+    margin-top: 1px !important;
+    font-size: .58rem !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+    max-width: 44px !important;
+    white-space: normal !important;
+  }
+
+  .name {
+    font-size: 1.04rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .meta {
+    font-size: .74rem !important;
+    line-height: 1.18 !important;
+    margin-top: 3px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .row {
+    grid-template-columns: 39px minmax(0, 1fr) minmax(70px, auto) !important;
+    gap: 4px 8px !important;
+  }
+
+  .badge {
+    width: 32px !important;
+    height: 32px !important;
+  }
+
+  .row-status {
+    font-size: .54rem !important;
+    max-width: 39px !important;
+  }
+
+  .name {
+    font-size: .98rem !important;
+  }
+
+  .meta {
+    font-size: .70rem !important;
+  }
+}
