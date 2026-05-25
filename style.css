@@ -3105,3 +3105,257 @@ body {
     min-height: 60px !important;
   }
 }
+
+
+/* v61 final polish: registration controls never overlap + more premium mobile start cards */
+
+/* Registration controls: stable, non-overlapping layout */
+.registration-panel .form-grid {
+  align-items: end !important;
+}
+
+.registration-panel label:has(#finishTime),
+.registration-panel .time-shortcut {
+  min-width: 0 !important;
+}
+
+.registration-panel input[type="time"],
+.registration-panel .time-shortcut {
+  min-height: 76px !important;
+  height: 76px !important;
+  border-radius: 24px !important;
+}
+
+.registration-panel input[type="time"] {
+  display: block !important;
+  width: 100% !important;
+  text-align: center !important;
+  padding: 14px 48px 22px 48px !important;
+  font-size: 1.46rem !important;
+  font-weight: 880 !important;
+  line-height: 1 !important;
+}
+
+.registration-panel label:has(#finishTime)::after {
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 12px !important;
+  text-align: center !important;
+  font-size: .70rem !important;
+  line-height: 1 !important;
+}
+
+.registration-panel .time-shortcut {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 10px 12px !important;
+  font-size: 1.20rem !important;
+  font-weight: 880 !important;
+  line-height: 1.02 !important;
+  white-space: normal !important;
+  text-align: center !important;
+}
+
+.registration-panel .time-shortcut .button-sub {
+  font-size: .72rem !important;
+  line-height: 1 !important;
+  margin: 0 !important;
+  opacity: .82 !important;
+}
+
+/* On mobile, stack time and quick button vertically so they can never collide */
+@media (max-width: 520px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .registration-panel .form-grid .wide {
+    grid-column: 1 / -1 !important;
+  }
+
+  .registration-panel label:has(#finishTime),
+  .registration-panel .time-shortcut {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    min-height: 72px !important;
+    height: 72px !important;
+  }
+
+  .registration-panel input[type="time"] {
+    font-size: 1.42rem !important;
+    padding: 13px 48px 21px 48px !important;
+  }
+
+  .registration-panel .time-shortcut {
+    font-size: 1.16rem !important;
+  }
+}
+
+/* Keep edit runner form as two columns where possible, even though registration stacks */
+@media (max-width: 520px) {
+  #runnerForm.form-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  #runnerForm .wide {
+    grid-column: 1 / -1 !important;
+  }
+
+  #runnerForm label {
+    font-size: .70rem !important;
+    letter-spacing: .035em !important;
+    line-height: 1.18 !important;
+  }
+
+  #runnerForm input,
+  #runnerForm select {
+    min-height: 64px !important;
+    font-size: 1.07rem !important;
+  }
+
+  #runnerForm input#speed {
+    min-height: 68px !important;
+    font-size: 1.18rem !important;
+    text-align: center !important;
+  }
+}
+
+@media (max-width: 380px) {
+  #runnerForm label {
+    font-size: .66rem !important;
+  }
+
+  #runnerForm input,
+  #runnerForm select {
+    min-height: 60px !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Start cards: keep v58/v60 structure, improve mobile typography and balance */
+@media (max-width: 520px) {
+  .sticky-card .row {
+    padding: 11px !important;
+    gap: 9px 10px !important;
+    border-radius: 19px !important;
+  }
+
+  .sticky-card .stage-status-cell {
+    width: 46px !important;
+    min-width: 46px !important;
+  }
+
+  .sticky-card .stage-status-cell .badge {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 1rem !important;
+    border-radius: 12px !important;
+  }
+
+  .sticky-card .stage-status-cell .row-status {
+    max-width: 46px !important;
+    font-size: .52rem !important;
+    line-height: 1.02 !important;
+  }
+
+  .sticky-card .runner-details .name {
+    font-size: 1.02rem !important;
+    line-height: 1.08 !important;
+    font-weight: 950 !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: .68rem !important;
+    line-height: 1.16 !important;
+    margin-top: 3px !important;
+  }
+
+  .sticky-card .runner-details .actual-metrics {
+    font-size: .62rem !important;
+    line-height: 1.12 !important;
+  }
+
+  .sticky-card .time-stack {
+    gap: 8px !important;
+  }
+
+  .sticky-card .time-line {
+    min-height: 46px !important;
+    padding: 8px 9px !important;
+    border-radius: 15px !important;
+  }
+
+  .sticky-card .time-line span {
+    font-size: .55rem !important;
+    letter-spacing: .075em !important;
+  }
+
+  .sticky-card .time-line strong,
+  .sticky-card .start-line strong,
+  .sticky-card .actual-finish strong {
+    font-size: 1.20rem !important;
+  }
+
+  .sticky-card .start-line strong {
+    font-size: 1.32rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .sticky-card .row {
+    padding: 10px !important;
+    gap: 8px !important;
+  }
+
+  .sticky-card .stage-status-cell {
+    width: 42px !important;
+    min-width: 42px !important;
+  }
+
+  .sticky-card .stage-status-cell .badge {
+    width: 33px !important;
+    height: 33px !important;
+    font-size: .92rem !important;
+  }
+
+  .sticky-card .stage-status-cell .row-status {
+    font-size: .48rem !important;
+  }
+
+  .sticky-card .runner-details .name {
+    font-size: .94rem !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: .62rem !important;
+  }
+
+  .sticky-card .time-line {
+    min-height: 43px !important;
+    padding: 7px !important;
+  }
+
+  .sticky-card .time-line span {
+    font-size: .50rem !important;
+    letter-spacing: .045em !important;
+  }
+
+  .sticky-card .time-line strong,
+  .sticky-card .start-line strong,
+  .sticky-card .actual-finish strong {
+    font-size: 1.08rem !important;
+  }
+
+  .sticky-card .start-line strong {
+    font-size: 1.18rem !important;
+  }
+}
