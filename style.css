@@ -2204,3 +2204,221 @@ body {
     font-size:1.02rem;
   }
 }
+
+
+/* v56: compact premium start-time cards + desktop Messenger fallback */
+
+.runner-links {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 10px !important;
+  align-items: center !important;
+}
+
+.runner-link-desktop {
+  display: none !important;
+}
+
+@media (min-width: 700px) {
+  .runner-link-mobile {
+    display: none !important;
+  }
+
+  .runner-link-desktop {
+    display: flex !important;
+  }
+}
+
+/* Starttider: lower, tighter and more balanced. */
+.sticky-card .list {
+  gap: 8px !important;
+}
+
+.sticky-card .row {
+  grid-template-columns: 46px minmax(0, 1fr) 136px !important;
+  gap: 10px !important;
+  min-height: auto !important;
+  padding: 9px 10px !important;
+  border-radius: 18px !important;
+  align-items: center !important;
+}
+
+.sticky-card .stage-status-cell {
+  min-width: 42px !important;
+  gap: 4px !important;
+  align-self: center !important;
+}
+
+.sticky-card .stage-status-cell .badge {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+  font-size: 0.92rem !important;
+}
+
+.sticky-card .stage-status-cell .row-status {
+  max-width: 48px !important;
+  font-size: 0.52rem !important;
+  line-height: 1.0 !important;
+  letter-spacing: -0.02em !important;
+  opacity: 0.92 !important;
+}
+
+.sticky-card .runner-details {
+  align-self: center !important;
+}
+
+.sticky-card .runner-details .name {
+  font-size: 0.95rem !important;
+  line-height: 1.06 !important;
+  margin: 0 !important;
+}
+
+.sticky-card .runner-details .meta {
+  margin-top: 2px !important;
+  font-size: 0.66rem !important;
+  line-height: 1.12 !important;
+}
+
+.sticky-card .runner-details .actual-metrics {
+  margin-top: 4px !important;
+  padding: 4px 7px !important;
+  font-size: 0.60rem !important;
+  line-height: 1.05 !important;
+}
+
+.sticky-card .time-stack {
+  min-width: 136px !important;
+  width: 136px !important;
+  gap: 5px !important;
+  align-self: center !important;
+}
+
+.sticky-card .time-line {
+  min-height: 34px !important;
+  padding: 5px 8px !important;
+  border-radius: 13px !important;
+  gap: 6px !important;
+}
+
+.sticky-card .time-line span {
+  white-space: nowrap !important;
+  font-size: 0.50rem !important;
+  letter-spacing: 0.04em !important;
+  line-height: 1 !important;
+}
+
+.sticky-card .time-line strong,
+.sticky-card .start-line strong,
+.sticky-card .actual-finish strong {
+  font-size: 1.02rem !important;
+  line-height: 1 !important;
+  font-weight: 880 !important;
+  letter-spacing: -0.045em !important;
+}
+
+@media (max-width: 520px) {
+  .sticky-card {
+    padding: 12px !important;
+  }
+
+  .sticky-card .row {
+    grid-template-columns: 44px minmax(0, 1fr) 118px !important;
+    gap: 7px !important;
+    padding: 8px 8px !important;
+    border-radius: 17px !important;
+  }
+
+  .sticky-card .stage-status-cell {
+    min-width: 40px !important;
+    gap: 3px !important;
+  }
+
+  .sticky-card .stage-status-cell .badge {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.86rem !important;
+  }
+
+  .sticky-card .stage-status-cell .row-status {
+    max-width: 42px !important;
+    font-size: 0.48rem !important;
+  }
+
+  .sticky-card .runner-details .name {
+    font-size: 0.88rem !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: 0.61rem !important;
+    line-height: 1.10 !important;
+  }
+
+  .sticky-card .time-stack {
+    min-width: 118px !important;
+    width: 118px !important;
+    gap: 4px !important;
+  }
+
+  .sticky-card .time-line {
+    min-height: 32px !important;
+    padding: 5px 6px !important;
+    border-radius: 12px !important;
+    gap: 4px !important;
+  }
+
+  .sticky-card .time-line span {
+    font-size: 0.46rem !important;
+    letter-spacing: 0.015em !important;
+  }
+
+  .sticky-card .time-line strong,
+  .sticky-card .start-line strong,
+  .sticky-card .actual-finish strong {
+    font-size: 0.96rem !important;
+  }
+
+  .team-summary-card {
+    margin-top: 12px !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .sticky-card .row {
+    grid-template-columns: 40px minmax(0, 1fr) 108px !important;
+    gap: 6px !important;
+    padding: 7px !important;
+  }
+
+  .sticky-card .stage-status-cell .badge {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
+  .sticky-card .stage-status-cell .row-status {
+    font-size: 0.45rem !important;
+  }
+
+  .sticky-card .runner-details .name {
+    font-size: 0.84rem !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: 0.58rem !important;
+  }
+
+  .sticky-card .time-stack {
+    min-width: 108px !important;
+    width: 108px !important;
+  }
+
+  .sticky-card .time-line strong,
+  .sticky-card .start-line strong,
+  .sticky-card .actual-finish strong {
+    font-size: 0.90rem !important;
+  }
+
+  .sticky-card .time-line span {
+    font-size: 0.42rem !important;
+  }
+}

@@ -510,29 +510,6 @@ boot();
 })();
 
 
-// v53: Messenger link fallback.
-// Desktop uses m.me/j because it opens correctly in browser.
-// Mobile uses messenger.com/t because m.me/j reports expired on mobile.
-(function () {
-  function isMobileDevice() {
-    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
-  }
-
-  function updateMessengerLink() {
-    const link = document.querySelector(".runner-link");
-    if (!link) return;
-
-    link.href = isMobileDevice()
-      ? "https://www.messenger.com/t/1718067952671647"
-      : "https://m.me/j/1718067952671647";
-  }
-
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", updateMessengerLink);
-  } else {
-    updateMessengerLink();
-  }
-})();
 
 
 // v55 team summary calculations
