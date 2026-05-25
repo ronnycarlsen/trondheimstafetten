@@ -508,3 +508,70 @@ boot();
     characterData: true
   });
 })();
+
+
+// v53: Messenger link fallback.
+// Desktop uses m.me/j because it opens correctly in browser.
+// Mobile uses messenger.com/t because m.me/j reports expired on mobile.
+(function () {
+  function isMobileDevice() {
+    return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
+  }
+
+  function updateMessengerLink() {
+    const link = document.querySelector(".runner-link");
+    if (!link) return;
+
+    link.href = isMobileDevice()
+      ? "https://www.messenger.com/t/1718067952671647"
+      : "https://m.me/j/1718067952671647";
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", updateMessengerLink);
+  } else {
+    updateMessengerLink();
+  }
+})();
+
+
+// v55 team summary calculations
+(function () {
+  const originalRender = render;
+  render = function () {
+    originalRender();
+
+    try {
+      const rows = calculate();
+      if (!rows.length) return;
+
+      const last = rows[rows.length - 1];
+      const totalDistance = rows.reduce((s, r) => s + Number(r.distance_km || 0), 0);
+
+      const startMin = toMinutes(DEFAULT_START_TIME);
+      const finishMin = Math.round(last.finishEstimate || 0);
+
+      let duration = finishMin - startMin;
+      if (duration < 0) duration += 24 * 60;
+
+      const hours = Math.floor(duration / 60);
+      const mins = duration % 60;
+
+      const avgSpeed = duration > 0
+        ? ((totalDistance / duration) * 60).toFixed(1)
+        : "--";
+
+      const setText = (id, value) => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+      };
+
+      setText("summaryFinish", toTime(finishMin));
+      setText("summaryDuration", `${hours} t ${mins} min`);
+      setText("summaryDistance", `${totalDistance.toFixed(1)} km`);
+      setText("summarySpeed", `${avgSpeed} km/t`);
+    } catch (e) {
+      console.warn("Summary error", e);
+    }
+  };
+})();

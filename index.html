@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cutrin Pace Control</title>
-  <link rel="stylesheet" href="style.css?v=52" />
+  <link rel="stylesheet" href="style.css?v=55" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -68,6 +68,27 @@
         <h2>Starttider</h2>
       </div>
       <div id="list" class="list"></div>
+      <div id="teamSummary" class="team-summary-card">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="summary-label">Estimert sluttid</span>
+            <strong id="summaryFinish">--:--</strong>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Estimert totaltid</span>
+            <strong id="summaryDuration">-- t -- min</strong>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Totalt distanse</span>
+            <strong id="summaryDistance">-- km</strong>
+          </div>
+          <div class="summary-item">
+            <span class="summary-label">Snittfart lag</span>
+            <strong id="summarySpeed">-- km/t</strong>
+          </div>
+        </div>
+      </div>
+
     </section>
 
     <section class="panel">
@@ -79,7 +100,7 @@
         <label>Navn
           <input id="name" placeholder="Løpernavn" required />
         </label>
-        <label>Hastighet km/t
+        <label>Estimert hastighet km/t
           <input id="speed" type="number" min="0" step="0.1" required />
         </label>
         <label>Distanse km
@@ -100,11 +121,11 @@
         <a href="https://www.yr.no/nb/v%C3%A6rvarsel/daglig-tabell/1-211102/Norge/Tr%C3%B8ndelag/Trondheim/Trondheim" target="_blank" rel="noopener">🌦️ Værmelding</a>
         <a href="https://www.trondheimstafetten.no/loypa/etappebeskrivelser/" target="_blank" rel="noopener">🗺️ Løypekart</a>
       </div>
-      <a class="runner-link" href="https://www.messenger.com/t/1718067952671647" target="_blank" rel="noopener">💬 Cutrin Runners</a>
+      <a class="runner-link" href="https://m.me/j/1718067952671647" target="_blank" rel="noopener">💬 Cutrin Runners</a>
     </footer>
 
   </main>
   <script src="config.js"></script>
-  <script src="app.js?v=52"></script>
+  <script src="app.js?v=55"></script>
 </body>
 </html>
