@@ -3003,3 +3003,105 @@ body {
     font-size: 1.06rem !important;
   }
 }
+
+
+/* v60: keep v58 card layout, emphasize start time, clean one Messenger button, improve speed field on mobile */
+
+/* Footer: only one Messenger button should be visible */
+.runner-links,
+.runner-link-mobile,
+.runner-link-desktop {
+  display: none !important;
+}
+
+.weather-footer > .runner-link {
+  display: flex !important;
+}
+
+/* Starttider: keep v58 layout, but make START visually primary */
+.sticky-card .start-line {
+  border-color: rgba(0, 232, 199, .24) !important;
+  background:
+    linear-gradient(145deg, rgba(0, 232, 199, .105), rgba(12, 27, 37, .96)) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.07),
+    0 10px 22px rgba(0,0,0,.14) !important;
+}
+
+.sticky-card .start-line span {
+  color: rgba(194, 255, 244, .86) !important;
+  font-weight: 900 !important;
+}
+
+.sticky-card .start-line strong {
+  color: #d9fff7 !important;
+  font-size: 1.34rem !important;
+  font-weight: 940 !important;
+  letter-spacing: -.055em !important;
+}
+
+.sticky-card .finish-line strong {
+  opacity: .88 !important;
+}
+
+@media (max-width: 520px) {
+  .sticky-card .start-line strong {
+    font-size: 1.28rem !important;
+  }
+
+  .sticky-card .finish-line strong {
+    font-size: 1.08rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .sticky-card .start-line strong {
+    font-size: 1.18rem !important;
+  }
+
+  .sticky-card .finish-line strong {
+    font-size: 1rem !important;
+  }
+}
+
+/* Mobile polish for the longer "Estimert hastighet km/t" field */
+@media (max-width: 520px) {
+  .registration-panel label {
+    font-size: .70rem !important;
+    letter-spacing: .045em !important;
+    line-height: 1.18 !important;
+  }
+
+  .registration-panel label:has(#speed) {
+    letter-spacing: .025em !important;
+  }
+
+  .registration-panel input#speed {
+    min-height: 64px !important;
+    font-size: 1.18rem !important;
+    font-weight: 900 !important;
+    text-align: center !important;
+    border-radius: 22px !important;
+    background:
+      linear-gradient(145deg, rgba(31,58,70,.98), rgba(17,38,51,.97)) !important;
+    border-color: rgba(0,232,199,.44) !important;
+    box-shadow:
+      inset 0 1px 0 rgba(255,255,255,.08),
+      0 14px 28px rgba(0,0,0,.15) !important;
+  }
+
+  .registration-panel .form-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .registration-panel label {
+    font-size: .66rem !important;
+  }
+
+  .registration-panel input#speed {
+    font-size: 1.08rem !important;
+    min-height: 60px !important;
+  }
+}
