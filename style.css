@@ -3537,3 +3537,134 @@ body {
     font-size: .94rem !important;
   }
 }
+
+
+/* v63: premium registration alignment + correct edit-field emphasis */
+
+/* Registration panel: center all control labels and helper text */
+.registration-panel label {
+  text-align: center !important;
+  justify-items: center !important;
+}
+
+.registration-panel label > select,
+.registration-panel label > input {
+  text-align: center !important;
+}
+
+.registration-panel .field-help {
+  width: 100% !important;
+  text-align: center !important;
+}
+
+/* PC/tablet: make clock and quick button align visually despite labels/helper text */
+@media (min-width: 521px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr 1fr !important;
+    align-items: start !important;
+    gap: 14px !important;
+  }
+
+  .registration-panel .form-grid .wide {
+    grid-column: 1 / -1 !important;
+  }
+
+  .registration-panel label:has(#finishTime) {
+    display: grid !important;
+    grid-template-rows: 18px 76px !important;
+    gap: 8px !important;
+    margin: 0 !important;
+  }
+
+  .registration-panel label:has(#finishTime) .field-help {
+    display: none !important;
+  }
+
+  .registration-panel .time-shortcut {
+    margin-top: 26px !important;
+    align-self: start !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    height: 76px !important;
+    min-height: 76px !important;
+  }
+}
+
+/* Mobile keeps the good stacked layout, but with centered text */
+@media (max-width: 520px) {
+  .registration-panel .form-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .registration-panel label:has(#finishTime) .field-help {
+    display: none !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    height: 72px !important;
+    min-height: 72px !important;
+  }
+}
+
+/* Edit runner form: neutralize broad field recolors from earlier versions */
+#runnerForm.runner-edit-form input,
+#runnerForm.runner-edit-form select {
+  background:
+    linear-gradient(145deg, rgba(17, 35, 47, .98), rgba(10, 24, 35, .96)) !important;
+  border: 1px solid var(--field-border) !important;
+  color: #f7fbfd !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.055),
+    0 12px 26px rgba(0,0,0,.12) !important;
+}
+
+/* Only fields the user actively changes most: Navn + Estimert hastighet */
+#runnerForm.runner-edit-form input#name,
+#runnerForm.runner-edit-form input#speed {
+  background:
+    linear-gradient(145deg, rgba(31,58,70,.98), rgba(17,38,51,.97)) !important;
+  border: 1px solid rgba(0,232,199,.44) !important;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.08),
+    0 14px 30px rgba(0,0,0,.16) !important;
+}
+
+#runnerForm.runner-edit-form input#name:focus,
+#runnerForm.runner-edit-form input#speed:focus {
+  border-color: rgba(0,232,199,.66) !important;
+  box-shadow:
+    0 0 0 3px rgba(0,232,199,.13),
+    inset 0 1px 0 rgba(255,255,255,.09) !important;
+}
+
+/* Distanse should match place fields, not highlighted */
+#runnerForm.runner-edit-form input#distance {
+  background:
+    linear-gradient(145deg, rgba(17, 35, 47, .98), rgba(10, 24, 35, .96)) !important;
+  border: 1px solid var(--field-border) !important;
+}
+
+/* Keep label layout premium and readable */
+#runnerForm.runner-edit-form label {
+  text-align: left !important;
+  justify-items: stretch !important;
+}
+
+#runnerForm.runner-edit-form label:has(#name),
+#runnerForm.runner-edit-form label:has(#speed) {
+  color: rgba(235, 250, 252, .94) !important;
+}
+
+@media (max-width: 520px) {
+  #runnerForm.runner-edit-form input#name,
+  #runnerForm.runner-edit-form input#speed {
+    min-height: 66px !important;
+  }
+
+  #runnerForm.runner-edit-form input#distance {
+    text-align: center !important;
+  }
+}
