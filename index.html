@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Cutrin Pace Control</title>
-  <link rel="stylesheet" href="style.css?v=61" />
+  <link rel="stylesheet" href="style.css?v=62" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -93,23 +93,23 @@
 
     <section class="panel">
       <h2>Endre løper / hastighet</h2>
-      <form id="runnerForm" class="grid form-grid">
+      <form id="runnerForm" class="grid form-grid runner-edit-form">
         <label class="wide">Velg etappe / løper
           <select id="stage"></select>
         </label>
-        <label>Navn
+        <label class="wide">Navn
           <input id="name" placeholder="Løpernavn" required />
         </label>
-        <label>Estimert hastighet km/t
+        <label class="compact-field">Estimert hastighet km/t
           <input id="speed" type="number" min="0" step="0.1" required />
         </label>
-        <label>Distanse km
-          <input id="distance" type="number" min="0" step="0.001" required />
-        </label>
-        <label>Startsted
+        <label class="roomy-field">Startsted
           <input id="startPlace" placeholder="Startsted" />
         </label>
-        <label class="wide">Veksling / mål
+        <label class="compact-field">Distanse km
+          <input id="distance" type="number" min="0" step="0.001" required />
+        </label>
+        <label class="roomy-field">Veksling / mål
           <input id="finishPlace" placeholder="Veksling / mål" />
         </label>
         <button class="primary-button wide" type="submit">Lagre endring</button>
@@ -126,6 +126,6 @@
 
   </main>
   <script src="config.js"></script>
-  <script src="app.js?v=61"></script>
+  <script src="app.js?v=62"></script>
 </body>
 </html>

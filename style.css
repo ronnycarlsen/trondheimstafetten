@@ -3359,3 +3359,181 @@ body {
     font-size: 1.18rem !important;
   }
 }
+
+
+/* v62: PC alignment for registration controls, clearer start-card type, improved runner edit layout */
+
+/* PC/tablet: clock field and "Ferdig nå" button align as matching controls */
+@media (min-width: 521px) {
+  .registration-panel .form-grid {
+    align-items: end !important;
+  }
+
+  .registration-panel label:has(#finishTime) {
+    display: grid !important;
+    grid-template-rows: auto 76px !important;
+    gap: 7px !important;
+    margin: 0 !important;
+  }
+
+  .registration-panel input[type="time"],
+  .registration-panel .time-shortcut {
+    height: 76px !important;
+    min-height: 76px !important;
+  }
+
+  .registration-panel .time-shortcut {
+    align-self: end !important;
+    margin: 0 !important;
+  }
+}
+
+/* Starttider: same layout, just slightly more premium/readable type */
+.sticky-card .runner-details .name {
+  font-size: 1.07rem !important;
+}
+
+.sticky-card .runner-details .meta {
+  font-size: .72rem !important;
+}
+
+.sticky-card .time-line span {
+  font-size: .57rem !important;
+}
+
+.sticky-card .finish-line strong {
+  font-size: 1.16rem !important;
+}
+
+@media (max-width: 520px) {
+  .sticky-card .runner-details .name {
+    font-size: 1.05rem !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: .70rem !important;
+  }
+
+  .sticky-card .time-line span {
+    font-size: .56rem !important;
+  }
+
+  .sticky-card .finish-line strong {
+    font-size: 1.12rem !important;
+  }
+}
+
+@media (max-width: 380px) {
+  .sticky-card .runner-details .name {
+    font-size: .97rem !important;
+  }
+
+  .sticky-card .runner-details .meta {
+    font-size: .64rem !important;
+  }
+}
+
+/* Endre løper / hastighet: name full width, then compact+roomy rows */
+#runnerForm.runner-edit-form {
+  grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr) !important;
+  gap: 13px !important;
+}
+
+#runnerForm.runner-edit-form .wide {
+  grid-column: 1 / -1 !important;
+}
+
+#runnerForm.runner-edit-form label:has(#name) input {
+  min-height: 66px !important;
+  font-size: 1.14rem !important;
+}
+
+#runnerForm.runner-edit-form .compact-field {
+  grid-column: 1 !important;
+}
+
+#runnerForm.runner-edit-form .roomy-field {
+  grid-column: 2 !important;
+}
+
+#runnerForm.runner-edit-form input,
+#runnerForm.runner-edit-form select {
+  min-height: 64px !important;
+}
+
+#runnerForm.runner-edit-form input#speed,
+#runnerForm.runner-edit-form input#distance {
+  text-align: center !important;
+  font-weight: 900 !important;
+}
+
+/* Mobile keeps the same intended order, with more room for start/finish fields */
+@media (max-width: 520px) {
+  #runnerForm.runner-edit-form {
+    grid-template-columns: minmax(0, .76fr) minmax(0, 1.24fr) !important;
+    gap: 12px !important;
+  }
+
+  #runnerForm.runner-edit-form .wide {
+    grid-column: 1 / -1 !important;
+  }
+
+  #runnerForm.runner-edit-form .compact-field {
+    grid-column: 1 !important;
+  }
+
+  #runnerForm.runner-edit-form .roomy-field {
+    grid-column: 2 !important;
+  }
+
+  #runnerForm.runner-edit-form label {
+    font-size: .68rem !important;
+    letter-spacing: .025em !important;
+    line-height: 1.16 !important;
+  }
+
+  #runnerForm.runner-edit-form label:has(#speed) {
+    font-size: .62rem !important;
+    letter-spacing: .01em !important;
+  }
+
+  #runnerForm.runner-edit-form input,
+  #runnerForm.runner-edit-form select {
+    min-height: 62px !important;
+    font-size: 1rem !important;
+    border-radius: 20px !important;
+  }
+
+  #runnerForm.runner-edit-form input#name {
+    font-size: 1.12rem !important;
+  }
+
+  #runnerForm.runner-edit-form input#speed,
+  #runnerForm.runner-edit-form input#distance {
+    font-size: 1.08rem !important;
+    background:
+      linear-gradient(145deg, rgba(31,58,70,.98), rgba(17,38,51,.97)) !important;
+    border-color: rgba(0,232,199,.42) !important;
+  }
+}
+
+@media (max-width: 380px) {
+  #runnerForm.runner-edit-form {
+    grid-template-columns: minmax(0, .72fr) minmax(0, 1.28fr) !important;
+    gap: 10px !important;
+  }
+
+  #runnerForm.runner-edit-form label {
+    font-size: .63rem !important;
+  }
+
+  #runnerForm.runner-edit-form label:has(#speed) {
+    font-size: .58rem !important;
+  }
+
+  #runnerForm.runner-edit-form input,
+  #runnerForm.runner-edit-form select {
+    min-height: 58px !important;
+    font-size: .94rem !important;
+  }
+}
