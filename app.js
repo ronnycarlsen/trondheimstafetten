@@ -11,7 +11,7 @@ const DEFAULT_RUNNERS = [
   { stage: 10, name: "Lien", distance_km: 2.58, speed_kmh: 9.9, start_place: "Marinen", finish_place: "Trondheim Stadion" }
 ];
 
-const DEFAULT_START_TIME = "14:30";
+const DEFAULT_START_TIME = "15:10";
 const STORE_KEY = "trondheimstafetten-state-v2";
 let runners = [];
 let actuals = {};
